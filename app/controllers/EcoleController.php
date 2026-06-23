@@ -43,6 +43,70 @@ class EcoleController extends Controller {
         ]);
     }
 
+    public function register() {
+        if (!empty($_SESSION['ecole_id'])) {
+            $this->redirect('/school/Ecole/dashboard');
+        }
+
+        $error = '';
+        $inputs = [
+            'nom_etablissement' => '',
+            'adresse' => '',
+            'telephone_contact' => '',
+            'email_officiel' => '',
+            'code_ecole' => '',
+            'province_education' => '',
+            'devise_principale' => 'USD',
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inputs['nom_etablissement'] = trim($_POST['nom_etablissement'] ?? '');
+            $inputs['adresse'] = trim($_POST['adresse'] ?? '');
+            $inputs['telephone_contact'] = trim($_POST['telephone_contact'] ?? '');
+            $inputs['email_officiel'] = trim($_POST['email_officiel'] ?? '');
+            $inputs['code_ecole'] = trim($_POST['code_ecole'] ?? '');
+            $inputs['province_education'] = trim($_POST['province_education'] ?? '');
+            $inputs['devise_principale'] = trim($_POST['devise_principale'] ?? 'USD');
+            $password = $_POST['password'] ?? '';
+            $passwordConfirm = $_POST['password_confirm'] ?? '';
+
+            if (empty($inputs['nom_etablissement']) || empty($inputs['telephone_contact']) || empty($inputs['email_officiel']) || empty($password) || empty($passwordConfirm)) {
+                $error = 'Les champs nom, téléphone, email et mot de passe sont obligatoires.';
+            } elseif (!filter_var($inputs['email_officiel'], FILTER_VALIDATE_EMAIL)) {
+                $error = 'Entrez une adresse email officielle valide.';
+            } elseif ($password !== $passwordConfirm) {
+                $error = 'Les mots de passe ne correspondent pas.';
+            } elseif ($this->ecoleModel->findByEmail($inputs['email_officiel'])) {
+                $error = 'Un établissement existe déjà avec cet email.';
+            } else {
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $inserted = $this->ecoleModel->create([
+                    'nom_etablissement' => $inputs['nom_etablissement'],
+                    'adresse' => $inputs['adresse'],
+                    'telephone_contact' => $inputs['telephone_contact'],
+                    'email_officiel' => $inputs['email_officiel'],
+                    'mot_de_passe' => $hash,
+                    'statut_systeme' => 'Actif',
+                    'code_ecole' => $inputs['code_ecole'],
+                    'province_education' => $inputs['province_education'],
+                    'devise_principale' => $inputs['devise_principale'],
+                ]);
+
+                if ($inserted) {
+                    $_SESSION['success_message'] = 'École créée. Vous pouvez maintenant vous connecter.';
+                    $this->redirect('/school/Ecole/login');
+                } else {
+                    $error = 'Impossible de créer l’établissement. Réessayez plus tard.';
+                }
+            }
+        }
+
+        $this->renderView('ecole/register', [
+            'error' => $error,
+            'inputs' => $inputs,
+        ]);
+    }
+
     public function dashboard() {
         if (empty($_SESSION['ecole_id'])) {
             $this->redirect('/school/Ecole/login');

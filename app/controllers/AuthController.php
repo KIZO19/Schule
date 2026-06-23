@@ -115,7 +115,7 @@ class AuthController extends Controller {
                 ]);
 
                 if ($inserted) {
-                    $parent = $this->parentModel->findByEmail($inputs['email']);
+                    $parent = $this->parentModel->findByEmail($inputs['email'], $ecoleId);
                     if ($parent) {
                         $this->childRequestModel->createRequest([
                             'parent_id' => $parent['id'],
@@ -144,6 +144,6 @@ class AuthController extends Controller {
     public function logout() {
         session_unset();
         session_destroy();
-        $this->redirect('/school/');
+        $this->redirect('/school/Ecole/login');
     }
 }

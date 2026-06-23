@@ -16,6 +16,7 @@ class AdminController extends Controller {
     }
 
     public function childRequests() {
+        $this->ensureSchoolAuthenticated();
         $requests = $this->childRequestModel->getPendingRequests();
         $this->renderView('admin/child_requests', [
             'requests' => $requests
@@ -23,6 +24,7 @@ class AdminController extends Controller {
     }
 
     public function approveRequest($id = null) {
+        $this->ensureSchoolAuthenticated();
         if ($id) {
             $this->childRequestModel->approveRequest($id);
         }
@@ -30,6 +32,7 @@ class AdminController extends Controller {
     }
 
     public function rejectRequest($id = null) {
+        $this->ensureSchoolAuthenticated();
         if ($id) {
             $this->childRequestModel->rejectRequest($id);
         }
