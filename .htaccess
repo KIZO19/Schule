@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Si le fichier ou dossier demandé dans public/ existe, on le sert
+RewriteCond %{DOCUMENT_ROOT}/school/public/$1 -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/school/public/$1 -d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Sinon, on redirige tout le reste vers public/index.php
+RewriteRule ^(.*)$ public/index.php [L]

@@ -1,0 +1,1 @@
+<?php\n// Statistiques globales (Effectifs, Solde caisse)\n?>

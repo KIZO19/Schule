@@ -1,0 +1,1 @@
+<?php\n// Page non trouvée (404 Not Found)\n?>

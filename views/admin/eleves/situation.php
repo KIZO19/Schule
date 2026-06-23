@@ -1,0 +1,1 @@
+<?php\n// Suivi financier et disciplinaire en temps réel\n?>

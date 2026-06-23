@@ -1,0 +1,1 @@
+<?php\n// Barre du haut (Profil, notifications)\n?>

@@ -1,0 +1,1 @@
+<?php\n// Requêtes SQL liées aux salaires/fiches de paie

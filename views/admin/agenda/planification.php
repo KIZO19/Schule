@@ -1,0 +1,1 @@
+<?php\n// Calendrier des événements administratifs\n?>
