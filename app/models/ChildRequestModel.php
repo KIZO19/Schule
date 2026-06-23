@@ -6,6 +6,25 @@ class ChildRequestModel {
 
     public function __construct() {
         $this->db = Database::getInstance();
+        $this->ensureTableExists();
+    }
+
+    private function ensureTableExists() {
+        $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS child_requests (
+                id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                parent_id INT(11) NOT NULL,
+                nom VARCHAR(100) NOT NULL,
+                postnom VARCHAR(100) NOT NULL,
+                prenom VARCHAR(100) NOT NULL,
+                genre ENUM("Masculin", "Féminin", "Autre") NOT NULL,
+                date_naissance DATE NOT NULL,
+                statut ENUM("pending", "approved", "rejected") NOT NULL DEFAULT "pending",
+                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME NULL DEFAULT NULL,
+                FOREIGN KEY (parent_id) REFERENCES parents(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+        );
     }
 
     public function createRequest($data) {
