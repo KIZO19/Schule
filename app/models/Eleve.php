@@ -8,9 +8,20 @@ class Eleve {
         $this->db = Database::getInstance();
     }
 
-    // Retourne la liste des élèves pour un parent
+    // Retourne la liste des élèves pour un parent (inclut nom_classe via la table inscriptions)
     public function getElevesByParent($parentId) {
-        $stmt = $this->db->prepare('SELECT e.*, c.nom_classe FROM eleves e LEFT JOIN classes c ON e.classe_id = c.id WHERE e.parent_id = :parent_id');
+        $sql = "SELECT e.*, (
+            SELECT cl.nom_classe
+            FROM inscriptions ins
+            JOIN classes cl ON ins.classe_id = cl.id
+            WHERE ins.eleve_id = e.id
+            ORDER BY ins.id DESC
+            LIMIT 1
+        ) AS nom_classe
+        FROM eleves e
+        WHERE e.parent_id = :parent_id";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute(['parent_id' => $parentId]);
         return $stmt->fetchAll();
     }

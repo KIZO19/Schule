@@ -13,8 +13,13 @@ class ParentController extends Controller {
         $eleveModel = $this->loadModel('Eleve');
         $eleves = $eleveModel->getElevesByParent($parentId);
 
-        // Choisit le premier enfant par défaut
-        $eleve = !empty($eleves) ? $eleves[0] : null;
+        // Choisit le premier enfant par défaut ; si aucun, fournir des valeurs par défaut pour éviter les warnings
+        $eleve = !empty($eleves) ? $eleves[0] : [
+            'id' => null,
+            'prenom' => '',
+            'nom' => '',
+            'nom_classe' => 'Non définie'
+        ];
 
         $compte = ['reste_a_payer' => 0.0];
         $discipline = [];
