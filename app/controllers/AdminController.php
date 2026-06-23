@@ -2,15 +2,36 @@
 // app/controllers/AdminController.php
 
 class AdminController extends Controller {
-    
-    public function dashboard() {
-        // 1. (Optionnel) Aller chercher des données via le modèle
-        // $eleveModel = $this->loadModel('Eleve');
-        // $total = $eleveModel->countAll();
+    private $childRequestModel;
 
-        // 2. Transmettre les données à la vue correspondante
+    public function __construct() {
+        $this->childRequestModel = $this->loadModel('ChildRequestModel');
+    }
+
+    public function dashboard() {
         $this->renderView('admin/dashboard', [
             'titrePage' => 'Tableau de Bord Secrétariat'
         ]);
+    }
+
+    public function childRequests() {
+        $requests = $this->childRequestModel->getPendingRequests();
+        $this->renderView('admin/child_requests', [
+            'requests' => $requests
+        ]);
+    }
+
+    public function approveRequest($id = null) {
+        if ($id) {
+            $this->childRequestModel->approveRequest($id);
+        }
+        $this->redirect('/school/Admin/childRequests');
+    }
+
+    public function rejectRequest($id = null) {
+        if ($id) {
+            $this->childRequestModel->rejectRequest($id);
+        }
+        $this->redirect('/school/Admin/childRequests');
     }
 }

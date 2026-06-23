@@ -41,6 +41,47 @@
                         <div class="input-group-text"><span class="fas fa-phone"></span></div>
                     </div>
                 </div>
+                <div class="card card-outline card-secondary mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Informations sur l'enfant</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" name="child_nom" class="form-control" placeholder="Nom de l'enfant" value="<?= htmlspecialchars($inputs['child_nom'] ?? '') ?>">
+                            <div class="input-group-append">
+                                <div class="input-group-text"><span class="fas fa-id-card"></span></div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="child_postnom" class="form-control" placeholder="Postnom de l'enfant" value="<?= htmlspecialchars($inputs['child_postnom'] ?? '') ?>">
+                            <div class="input-group-append">
+                                <div class="input-group-text"><span class="fas fa-id-card"></span></div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="child_prenom" class="form-control" placeholder="Prénom de l'enfant" value="<?= htmlspecialchars($inputs['child_prenom'] ?? '') ?>">
+                            <div class="input-group-append">
+                                <div class="input-group-text"><span class="fas fa-id-badge"></span></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <select name="child_genre" class="form-control">
+                                        <option value="">Genre</option>
+                                        <option value="M" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'M') ? 'selected' : '' ?>>M</option>
+                                        <option value="F" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'F') ? 'selected' : '' ?>>F</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <input type="date" name="child_date_naissance" class="form-control" value="<?= htmlspecialchars($inputs['child_date_naissance'] ?? '') ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-group mb-3">
                     <input type="password" name="password" class="form-control" placeholder="Mot de passe">
                     <div class="input-group-append">

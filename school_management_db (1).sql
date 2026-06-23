@@ -641,6 +641,27 @@ INSERT INTO `parents` (`id`, `ecole_id`, `nom_responsable`, `telephone`, `email`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `child_requests`
+--
+
+CREATE TABLE `child_requests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `postnom` varchar(50) NOT NULL,
+  `prenom` varchar(50) DEFAULT NULL,
+  `genre` char(1) NOT NULL,
+  `date_naissance` date NOT NULL,
+  `statut` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `participants_evenement`
 --
 

@@ -24,7 +24,11 @@ class Controller {
     }
 
     public function redirect($route) {
-        header('Location: ' . $route);
+        if (strpos($route, 'http://') === 0 || strpos($route, 'https://') === 0 || strpos($route, '/') === 0) {
+            header('Location: ' . $route);
+        } else {
+            header('Location: ' . BASE_URL . '/' . ltrim($route, '/'));
+        }
         exit;
     }
 }
