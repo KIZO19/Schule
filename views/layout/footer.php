@@ -40,3 +40,24 @@
 		}
 	})();
 </script>
+<script>
+// Minimal chart example using Chart.js if present
+if (typeof Chart !== 'undefined'){
+	const ctx = document.getElementById('gradesChart');
+	if (ctx){
+		new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+				datasets: [{
+					label: 'Moyenne',
+					data: [12, 15, 10, 18, 16, 19],
+					borderColor: '#1e90ff',
+					backgroundColor: 'rgba(30,144,255,0.15)'
+				}]
+			},
+			options: { responsive:true, maintainAspectRatio:false }
+		});
+	}
+}
+</script>

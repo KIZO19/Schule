@@ -1,0 +1,28 @@
+/* Custom theme overrides and variables to match AdminLTE example */
+:root{
+    --kpi-radius: 8px;
+    --kpi-padding: 18px;
+    --font-sans: 'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+body{ font-family: var(--font-sans); }
+
+.kpi-box{ border-radius: var(--kpi-radius); padding: var(--kpi-padding); color:#fff; min-height:96px; display:flex; flex-direction:column; justify-content:space-between; }
+.kpi-box .kpi-value{ font-size:2.25rem; font-weight:700; }
+.kpi-box .kpi-desc{ opacity:0.95 }
+.kpi-blue{ background: linear-gradient(180deg,#1e90ff,#1b7de6); }
+.kpi-green{ background: linear-gradient(180deg,#2ecc71,#26b96a); }
+.kpi-yellow{ background: linear-gradient(180deg,#f1c40f,#f0b90b); color:#222; }
+.kpi-red{ background: linear-gradient(180deg,#e74c3c,#d43d31); }
+
+.card-dark-header .card-header{ background: rgba(255,255,255,0.02); border-bottom:1px solid rgba(255,255,255,0.03); }
+
+/* Notes table highlight */
+.notes-table td, .notes-table th{ vertical-align:middle; }
+
+@media (max-width: 767px){
+    .kpi-box{ min-height:80px; padding:12px; }
+    .kpi-box .kpi-value{ font-size:1.5rem }
+}
+
+/* Ensure cards have subtle rounded corners in dark */
+.card { border-radius: 10px; }

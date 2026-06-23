@@ -32,4 +32,11 @@ class ParentModel {
             'mot_de_passe' => $data['mot_de_passe'],
         ]);
     }
+
+    public function hasChildren($parentId) {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM eleves WHERE parent_id = :parent_id');
+        $stmt->execute(['parent_id' => $parentId]);
+        $row = $stmt->fetch();
+        return isset($row['total']) && intval($row['total']) > 0;
+    }
 }

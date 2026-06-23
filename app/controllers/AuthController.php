@@ -31,6 +31,8 @@ class AuthController extends Controller {
 
                 if (!$parent || !password_verify($password, $parent['mot_de_passe'])) {
                     $error = 'Email ou mot de passe incorrect.';
+                } elseif (!$this->parentModel->hasChildren($parent['id'])) {
+                    $error = 'Votre compte n\'est pas valide tant qu\'un enfant n\'est pas inscrit.';
                 } else {
                     $_SESSION['parent_id'] = $parent['id'];
                     $_SESSION['parent_name'] = $parent['nom_responsable'];

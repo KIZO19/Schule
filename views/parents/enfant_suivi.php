@@ -22,46 +22,67 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-4 col-6">
-                    <div class="small-box <?= ($compte['reste_a_payer'] <= 0) ? 'bg-success' : 'bg-warning' ?>">
-                        <div class="inner">
-                            <h3><?= number_format($compte['reste_a_payer'], 2) ?> $</h3>
-                            <p>Situation Comptable</p>
+                <div class="col-12">
+                    <h2 class="mb-4">Tableau de bord — <?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                    <div class="kpi-box kpi-blue">
+                        <div>
+                            <div class="kpi-value"><?= number_format($compte['reste_a_payer'] ?? 0,2) ?> $</div>
+                            <div class="kpi-desc">Reste à payer</div>
                         </div>
-                        <div class="icon"><i class="fas fa-wallet"></i></div>
-                        <a href="#" class="small-box-footer">Détails <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="text-right"><i class="fas fa-wallet fa-2x"></i></div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-6">
-                    <div class="small-box <?= (!empty($discipline) && ($discipline['PointsRetires'] ?? 0) > 0) ? 'bg-danger' : 'bg-info' ?>">
-                        <div class="inner">
-                            <h3><?= isset($discipline['PointsRetires']) ? ('-'.intval($discipline['PointsRetires']).' Pts') : '—' ?></h3>
-                            <p>Discipline — <?= htmlspecialchars($discipline['conduite'] ?? 'Excellente') ?></p>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                    <div class="kpi-box kpi-green">
+                        <div>
+                            <div class="kpi-value"><?= isset($discipline['PointsRetires']) ? ('-'.intval($discipline['PointsRetires']).' Pts') : '0 Pts' ?></div>
+                            <div class="kpi-desc">Discipline</div>
                         </div>
-                        <div class="icon"><i class="fas fa-gavel"></i></div>
-                        <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="text-right"><i class="fas fa-gavel fa-2x"></i></div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-12">
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3><?= number_format($taux_presence ?? 0, 1) ?> %</h3>
-                            <p>Taux de présence (mois)</p>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                    <div class="kpi-box kpi-yellow">
+                        <div>
+                            <div class="kpi-value"><?= number_format($taux_presence ?? 0,1) ?> %</div>
+                            <div class="kpi-desc">Taux de présence (mois)</div>
                         </div>
-                        <div class="icon"><i class="fas fa-user-check"></i></div>
-                        <a href="#" class="small-box-footer">Détails <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="text-right"><i class="fas fa-user-check fa-2x"></i></div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                    <div class="kpi-box kpi-red">
+                        <div>
+                            <div class="kpi-value"><?= !empty($notes) ? count($notes) : 0 ?></div>
+                            <div class="kpi-desc">Dernières évaluations</div>
+                        </div>
+                        <div class="text-right"><i class="fas fa-chart-pie fa-2x"></i></div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <div class="card card-primary">
+                <div class="col-lg-8">
+                    <div class="card card-dark-header">
                         <div class="card-header">
-                            <h3 class="card-title">Dernières évaluations & notes</h3>
+                            <h3 class="card-title">Progression des notes</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="gradesChart" style="height:300px; width:100%"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Détails des évaluations</h3>
                         </div>
                         <div class="card-body table-responsive p-0">
-                            <table class="table table-hover table-valign-middle mb-0">
+                            <table class="table table-hover notes-table mb-0">
                                 <thead>
                                     <tr>
                                         <th>Cours</th>
@@ -87,6 +108,30 @@
                                 <?php endif; ?>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Carte de présence</h3>
+                        </div>
+                        <div class="card-body p-0">
+                            <div style="height:300px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f7fa,#e9eef6);">
+                                <div class="text-center text-muted">[Map / Graphique]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Résumé</h3>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Classe :</strong> <?= htmlspecialchars($eleve['nom_classe'] ?? 'Non définie') ?></p>
+                            <p><strong>Parent :</strong> <?= htmlspecialchars($_SESSION['parent_name'] ?? 'Parent') ?></p>
+                            <p><strong>Solde :</strong> <?= number_format($compte['reste_a_payer'] ?? 0,2) ?> $</p>
                         </div>
                     </div>
                 </div>

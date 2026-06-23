@@ -14,12 +14,14 @@ class ParentController extends Controller {
         $eleves = $eleveModel->getElevesByParent($parentId);
 
         // Choisit le premier enfant par défaut ; si aucun, fournir des valeurs par défaut pour éviter les warnings
-        $eleve = !empty($eleves) ? $eleves[0] : [
-            'id' => null,
-            'prenom' => '',
-            'nom' => '',
-            'nom_classe' => 'Non définie'
-        ];
+        if (empty($eleves)) {
+            $_SESSION['login_error'] = 'Votre compte n\'est pas valide tant qu\'un enfant n\'est pas inscrit.';
+            session_unset();
+            session_destroy();
+            $this->redirect('/school/');
+        }
+
+        $eleve = $eleves[0];
 
         $compte = ['reste_a_payer' => 0.0];
         $discipline = [];
