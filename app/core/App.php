@@ -2,9 +2,9 @@
 // app/core/App.php
 
 class App {
-    protected $controller = 'AuthController'; // Contrôleur par défaut
-    protected $method = 'login';              // Méthode par défaut
-    protected $params = [];                   // Paramètres optionnels
+    protected $controller = 'EcoleController'; // Contrôleur par défaut, l’authentification école passe en priorité
+    protected $method = 'login';               // Méthode par défaut
+    protected $params = [];                    // Paramètres optionnels
 
     public function __construct() {
         $url = $this->parseUrl();

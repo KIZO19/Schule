@@ -11,6 +11,10 @@ class AuthController extends Controller {
     }
 
     public function login() {
+        if (empty($_SESSION['ecole_id'])) {
+            $this->redirect('/school/Ecole/login');
+        }
+
         if (!empty($_SESSION['parent_id'])) {
             $this->redirect('/school/Parent/dashboard');
         }
@@ -29,7 +33,7 @@ class AuthController extends Controller {
             if (empty($email) || empty($password)) {
                 $error = 'Veuillez saisir votre email et votre mot de passe.';
             } else {
-                $parent = $this->parentModel->findByEmail($email);
+                $parent = $this->parentModel->findByEmail($email, $_SESSION['ecole_id'] ?? null);
 
                 if (!$parent || !password_verify($password, $parent['mot_de_passe'])) {
                     $error = 'Email ou mot de passe incorrect.';
@@ -54,6 +58,10 @@ class AuthController extends Controller {
     }
 
     public function register() {
+        if (empty($_SESSION['ecole_id'])) {
+            $this->redirect('/school/Ecole/login');
+        }
+
         if (!empty($_SESSION['parent_id'])) {
             $this->redirect('/school/Parent/dashboard');
         }
@@ -84,6 +92,7 @@ class AuthController extends Controller {
                 'date_naissance' => trim($_POST['child_date_naissance'] ?? '')
             ];
 
+            $ecoleId = $_SESSION['ecole_id'] ?? null;
             if (empty($inputs['name']) || empty($inputs['email']) || empty($inputs['telephone']) || empty($password) || empty($passwordConfirm)
                 || empty($child['nom']) || empty($child['postnom']) || empty($child['prenom']) || empty($child['genre']) || empty($child['date_naissance'])) {
                 $error = 'Tous les champs parent et enfant sont obligatoires.';
@@ -91,14 +100,14 @@ class AuthController extends Controller {
                 $error = 'Entrez une adresse email valide.';
             } elseif ($password !== $passwordConfirm) {
                 $error = 'Les mots de passe ne correspondent pas.';
-            } elseif ($this->parentModel->findByEmail($inputs['email'])) {
+            } elseif ($this->parentModel->findByEmail($inputs['email'], $ecoleId)) {
                 $error = 'Un compte existe déjà avec cet email.';
-            } elseif ($this->parentModel->findByTelephone($inputs['telephone'])) {
+            } elseif ($this->parentModel->findByTelephone($inputs['telephone'], $ecoleId)) {
                 $error = 'Un compte existe déjà avec ce numéro de téléphone.';
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $inserted = $this->parentModel->create([
-                    'ecole_id' => 1,
+                    'ecole_id' => $ecoleId,
                     'nom_responsable' => $inputs['name'],
                     'telephone' => $inputs['telephone'],
                     'email' => $inputs['email'],

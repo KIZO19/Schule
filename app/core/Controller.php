@@ -23,6 +23,12 @@ class Controller {
         }
     }
 
+    protected function ensureSchoolAuthenticated() {
+        if (empty($_SESSION['ecole_id'])) {
+            $this->redirect('/school/Ecole/login');
+        }
+    }
+
     public function redirect($route) {
         if (strpos($route, 'http://') === 0 || strpos($route, 'https://') === 0 || strpos($route, '/') === 0) {
             header('Location: ' . $route);

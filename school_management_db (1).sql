@@ -256,6 +256,7 @@ CREATE TABLE `ecoles` (
   `adresse` text DEFAULT NULL,
   `telephone_contact` varchar(20) NOT NULL,
   `email_officiel` varchar(100) DEFAULT NULL,
+  `mot_de_passe` varchar(255) DEFAULT NULL,
   `date_creation_compte` timestamp NOT NULL DEFAULT current_timestamp(),
   `statut_systeme` enum('Actif','Suspendu','En_Attente') DEFAULT 'En_Attente',
   `code_antenne` varchar(50) DEFAULT NULL COMMENT 'Code Antenne SERNIE/MINEPST',
@@ -268,8 +269,8 @@ CREATE TABLE `ecoles` (
 -- Dumping data for table `ecoles`
 --
 
-INSERT INTO `ecoles` (`id`, `nom_etablissement`, `adresse`, `telephone_contact`, `email_officiel`, `date_creation_compte`, `statut_systeme`, `code_antenne`, `code_ecole`, `province_education`, `devise_principale`) VALUES
-(1, 'École Pilote Test', NULL, '+243990000000', 'contact@ecole-pilote.com', '2026-06-23 16:29:21', 'Actif', NULL, NULL, NULL, 'USD');
+INSERT INTO `ecoles` (`id`, `nom_etablissement`, `adresse`, `telephone_contact`, `email_officiel`, `mot_de_passe`, `date_creation_compte`, `statut_systeme`, `code_antenne`, `code_ecole`, `province_education`, `devise_principale`) VALUES
+(1, 'École Pilote Test', NULL, '+243990000000', 'contact@ecole-pilote.com', NULL, '2026-06-23 16:29:21', 'Actif', NULL, NULL, NULL, 'USD');
 
 -- --------------------------------------------------------
 

@@ -8,15 +8,25 @@ class ParentModel {
         $this->db = Database::getInstance();
     }
 
-    public function findByEmail($email) {
-        $stmt = $this->db->prepare('SELECT * FROM parents WHERE email = :email LIMIT 1');
-        $stmt->execute(['email' => $email]);
+    public function findByEmail($email, $ecoleId = null) {
+        if ($ecoleId !== null) {
+            $stmt = $this->db->prepare('SELECT * FROM parents WHERE email = :email AND ecole_id = :ecole_id LIMIT 1');
+            $stmt->execute(['email' => $email, 'ecole_id' => $ecoleId]);
+        } else {
+            $stmt = $this->db->prepare('SELECT * FROM parents WHERE email = :email LIMIT 1');
+            $stmt->execute(['email' => $email]);
+        }
         return $stmt->fetch();
     }
 
-    public function findByTelephone($telephone) {
-        $stmt = $this->db->prepare('SELECT * FROM parents WHERE telephone = :telephone LIMIT 1');
-        $stmt->execute(['telephone' => $telephone]);
+    public function findByTelephone($telephone, $ecoleId = null) {
+        if ($ecoleId !== null) {
+            $stmt = $this->db->prepare('SELECT * FROM parents WHERE telephone = :telephone AND ecole_id = :ecole_id LIMIT 1');
+            $stmt->execute(['telephone' => $telephone, 'ecole_id' => $ecoleId]);
+        } else {
+            $stmt = $this->db->prepare('SELECT * FROM parents WHERE telephone = :telephone LIMIT 1');
+            $stmt->execute(['telephone' => $telephone]);
+        }
         return $stmt->fetch();
     }
 

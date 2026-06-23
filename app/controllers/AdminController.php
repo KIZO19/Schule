@@ -9,6 +9,7 @@ class AdminController extends Controller {
     }
 
     public function dashboard() {
+        $this->ensureSchoolAuthenticated();
         $this->renderView('admin/dashboard', [
             'titrePage' => 'Tableau de Bord Secrétariat'
         ]);
