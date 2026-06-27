@@ -10,7 +10,11 @@ class EcoleController extends Controller {
 
     public function landing() {
         $search = trim($_GET['q'] ?? '');
-        $schools = $this->ecoleModel->searchSchools($search);
+        $schools = [];
+
+        if ($search !== '') {
+            $schools = $this->ecoleModel->searchSchools($search);
+        }
 
         $this->renderView('ecole/landing', [
             'schools' => $schools,
@@ -37,6 +41,15 @@ class EcoleController extends Controller {
     public function clearSelection() {
         unset($_SESSION['selected_ecole_id'], $_SESSION['selected_ecole_name']);
         $this->redirect('/school/');
+    }
+
+    public function search() {
+        $query = trim($_GET['q'] ?? '');
+        $schools = $this->ecoleModel->searchSchools($query);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($schools);
+        exit;
     }
 
     public function login() {

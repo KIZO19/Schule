@@ -27,36 +27,45 @@
                     </div>
                     <div class="col-md-5 p-5 bg-white">
                         <h3 class="mb-4 text-dark">Choisissez votre établissement</h3>
-                        <form class="mb-4" action="<?= BASE_URL ?>/" method="get">
+                        <div class="mb-4">
                             <div class="input-group input-group-lg shadow-sm">
-                                <input type="search" name="q" class="form-control" placeholder="Rechercher une école" value="<?= htmlspecialchars($search ?? '') ?>">
+                                <input id="schoolSearch" type="search" class="form-control" placeholder="Rechercher une école" value="<?= htmlspecialchars($search ?? '') ?>" autocomplete="off">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                    <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
-                        </form>
-                        <?php if (!empty($schools)): ?>
-                            <div class="list-group mb-4">
-                                <?php foreach ($schools as $school): ?>
-                                    <div class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h5 class="mb-1"><?= htmlspecialchars($school['nom_etablissement']) ?></h5>
-                                            <a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>" class="btn btn-sm btn-outline-primary">Choisir</a>
-                                        </div>
-                                        <p class="mb-1 text-muted"><?= htmlspecialchars($school['adresse']) ?></p>
-                                        <small class="text-secondary"><?= htmlspecialchars($school['email_officiel']) ?> · <?= htmlspecialchars($school['telephone_contact']) ?></small>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="alert alert-warning" role="alert">
-                                <?php if (!empty($search)): ?>
+                        </div>
+                        <div class="table-responsive mb-4" id="schoolsWrapper" style="display: <?= $search !== '' ? 'block' : 'none'; ?>;">
+                            <table class="table table-hover table-borderless" id="schoolsTable">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Établissement</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="schoolsBody">
+                                    <?php if (!empty($schools)): ?>
+                                        <?php foreach ($schools as $school): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($school['nom_etablissement']) ?></td>
+                                                <td><a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>" class="btn btn-sm btn-outline-primary">Choisir</a></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="searchFeedback" class="mb-3">
+                            <?php if ($search === ''): ?>
+                                <div class="alert alert-info" role="alert">
+                                    Commencez par saisir le nom d'une école pour lancer la recherche.
+                                </div>
+                            <?php elseif (empty($schools)): ?>
+                                <div class="alert alert-warning" role="alert">
                                     L'école que vous recherchez n'est pas encore en partenariat avec notre système, ou son inscription n'est pas encore finalisée.
-                                <?php else: ?>
-                                    Aucune école active n'est disponible pour le moment.
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                         <a href="<?= BASE_URL ?>/Ecole/login" class="btn btn-primary btn-lg btn-block mb-3">
                             <i class="fas fa-school mr-2"></i> Se connecter comme école
                         </a>
@@ -70,5 +79,71 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    const searchInput = document.getElementById('schoolSearch');
+    const searchButton = document.getElementById('searchButton');
+    const schoolsBody = document.getElementById('schoolsBody');
+    const searchFeedback = document.getElementById('searchFeedback');
+
+    let searchTimer;
+
+    function renderSchools(schools, query) {
+        schoolsBody.innerHTML = '';
+        const wrapper = document.getElementById('schoolsWrapper');
+        wrapper.style.display = 'block';
+
+        if (!schools || schools.length === 0) {
+            searchFeedback.innerHTML = `
+                <div class="alert alert-warning" role="alert">
+                    ${query ? 'L\'école que vous recherchez n\'est pas encore en partenariat avec notre système, ou son inscription n\'est pas encore finalisée.' : 'Aucune école active n\'est disponible pour le moment.'}
+                </div>
+            `;
+            return;
+        }
+
+        searchFeedback.innerHTML = '';
+
+        schools.forEach(school => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${escapeHtml(school.nom_etablissement)}</td>
+                <td><a href="<?= BASE_URL ?>/Ecole/select/${school.id}" class="btn btn-sm btn-outline-primary">Choisir</a></td>
+            `;
+            schoolsBody.appendChild(row);
+        });
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    function fetchSchools(query) {
+        const url = new URL('<?= BASE_URL ?>/Ecole/search', window.location.origin);
+        url.searchParams.set('q', query);
+
+        fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => renderSchools(data, query))
+            .catch(() => {
+                searchFeedback.innerHTML = '<div class="alert alert-danger" role="alert">Impossible de charger les écoles pour le moment.</div>';
+            });
+    }
+
+    function handleSearch() {
+        const query = searchInput.value.trim();
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => fetchSchools(query), 250);
+    }
+
+    searchInput.addEventListener('input', handleSearch);
+    searchButton.addEventListener('click', () => fetchSchools(searchInput.value.trim()));
+</script>
 </body>
 </html>

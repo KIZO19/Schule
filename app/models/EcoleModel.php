@@ -38,16 +38,12 @@ class EcoleModel {
             $stmt = $this->db->prepare(
                 'SELECT id, nom_etablissement, adresse, telephone_contact, email_officiel
                  FROM ecoles
-                 WHERE statut_systeme = :statut AND (
-                     nom_etablissement LIKE :query OR
-                     adresse LIKE :query OR
-                     email_officiel LIKE :query
-                 )
+                 WHERE statut_systeme = :statut AND nom_etablissement LIKE :query
                  ORDER BY nom_etablissement'
             );
             $stmt->execute([
                 'statut' => 'Actif',
-                'query' => "%{$query}%"
+                'query' => "%{$query}%",
             ]);
         } else {
             $stmt = $this->db->prepare(
