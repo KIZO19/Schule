@@ -48,7 +48,10 @@
                                         <?php foreach ($schools as $school): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($school['nom_etablissement']) ?></td>
-                                                <td><a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>" class="btn btn-sm btn-outline-primary">Choisir</a></td>
+                                                <td class="text-right">
+                                                    <a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>?role=parent" class="btn btn-sm btn-outline-primary mr-2">Parent</a>
+                                                    <a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>?role=agent" class="btn btn-sm btn-outline-secondary">Personnel</a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -67,10 +70,13 @@
                             <?php endif; ?>
                         </div>
                         <a href="<?= BASE_URL ?>/Ecole/login" class="btn btn-primary btn-lg btn-block mb-3">
-                            <i class="fas fa-school mr-2"></i> Se connecter comme école
+                            <i class="fas fa-school mr-2"></i> Connexion établissement
                         </a>
+                        <div class="alert alert-info" role="alert">
+                            Après avoir choisi une école dans la liste, vous pourrez vous connecter en tant que parent ou personnel.
+                        </div>
                         <hr class="my-4">
-                        <p class="text-muted mb-0">Sélectionnez d’abord votre établissement, puis connectez-vous comme parent ou inscrivez-vous pour une validation par l’administration de l’école.</p>
+                        <p class="text-muted mb-0">Sélectionnez d’abord votre établissement, puis choisissez le type de connexion.</p>
                     </div>
                 </div>
             </div>

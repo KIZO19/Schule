@@ -35,6 +35,14 @@ class EcoleController extends Controller {
 
         $_SESSION['selected_ecole_id'] = $school['id'];
         $_SESSION['selected_ecole_name'] = $school['nom_etablissement'];
+
+        $role = strtolower(trim($_GET['role'] ?? 'parent'));
+        if ($role === 'agent') {
+            $this->redirect('/school/Agent/login');
+        } elseif ($role === 'ecole') {
+            $this->redirect('/school/Ecole/login');
+        }
+
         $this->redirect('/school/Auth/login');
     }
 
