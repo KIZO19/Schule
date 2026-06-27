@@ -48,4 +48,11 @@ class AgentModel {
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
+
+    public function countAgentsByEcole($ecoleId) {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM agents WHERE ecole_id = :ecole_id');
+        $stmt->execute(['ecole_id' => $ecoleId]);
+        $row = $stmt->fetch();
+        return intval($row['total'] ?? 0);
+    }
 }

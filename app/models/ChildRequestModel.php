@@ -54,6 +54,21 @@ class ChildRequestModel {
         return $stmt->fetchAll();
     }
 
+    public function countPendingRequestsByEcole($ecoleId) {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM child_requests cr JOIN parents p ON cr.parent_id = p.id WHERE cr.statut = "pending" AND p.ecole_id = :ecole_id');
+        $stmt->execute(['ecole_id' => $ecoleId]);
+        $row = $stmt->fetch();
+        return intval($row['total'] ?? 0);
+    }
+
+    public function getRecentPendingRequestsByEcole($ecoleId, $limit = 5) {
+        $stmt = $this->db->prepare('SELECT cr.*, p.nom_responsable, p.email FROM child_requests cr JOIN parents p ON cr.parent_id = p.id WHERE cr.statut = "pending" AND p.ecole_id = :ecole_id ORDER BY cr.created_at DESC LIMIT :limit');
+        $stmt->bindValue('ecole_id', $ecoleId, PDO::PARAM_INT);
+        $stmt->bindValue('limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function approveRequest($requestId) {
         $this->db->beginTransaction();
 

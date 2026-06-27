@@ -89,4 +89,11 @@ class Eleve {
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function countElevesByEcole($ecoleId) {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM eleves e JOIN parents p ON e.parent_id = p.id WHERE p.ecole_id = :ecole_id');
+        $stmt->execute(['ecole_id' => $ecoleId]);
+        $row = $stmt->fetch();
+        return intval($row['total'] ?? 0);
+    }
 }

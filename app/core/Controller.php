@@ -24,8 +24,14 @@ class Controller {
     }
 
     protected function ensureSchoolAuthenticated() {
-        if (empty($_SESSION['ecole_id'])) {
+        if (empty($_SESSION['ecole_id']) && empty($_SESSION['agent_id'])) {
             $this->redirect('/school/Ecole/login');
+        }
+    }
+
+    protected function ensureAgentAuthenticated() {
+        if (empty($_SESSION['agent_id'])) {
+            $this->redirect('/school/Agent/login');
         }
     }
 

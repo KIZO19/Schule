@@ -49,4 +49,11 @@ class ParentModel {
         $row = $stmt->fetch();
         return isset($row['total']) && intval($row['total']) > 0;
     }
+
+    public function countParentsByEcole($ecoleId) {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM parents WHERE ecole_id = :ecole_id');
+        $stmt->execute(['ecole_id' => $ecoleId]);
+        $row = $stmt->fetch();
+        return intval($row['total'] ?? 0);
+    }
 }

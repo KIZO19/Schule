@@ -9,14 +9,31 @@ class AdminController extends Controller {
     }
 
     public function dashboard() {
-        $this->ensureSchoolAuthenticated();
+        $this->ensureAgentAuthenticated();
+
+        $ecoleId = $_SESSION['ecole_id'] ?? $_SESSION['agent_ecole_id'];
+        $parentModel = $this->loadModel('ParentModel');
+        $eleveModel = $this->loadModel('Eleve');
+        $agentModel = $this->loadModel('AgentModel');
+
+        $metrics = [
+            'pendingRequests' => $this->childRequestModel->countPendingRequestsByEcole($ecoleId),
+            'parentsCount' => $parentModel->countParentsByEcole($ecoleId),
+            'studentsCount' => $eleveModel->countElevesByEcole($ecoleId),
+            'agentsCount' => $agentModel->countAgentsByEcole($ecoleId),
+        ];
+
+        $recentRequests = $this->childRequestModel->getRecentPendingRequestsByEcole($ecoleId, 4);
+
         $this->renderView('admin/dashboard', [
-            'titrePage' => 'Tableau de Bord Secrétariat'
+            'titrePage' => 'Tableau de Bord Secrétariat',
+            'metrics' => $metrics,
+            'recentRequests' => $recentRequests,
         ]);
     }
 
     public function childRequests() {
-        $this->ensureSchoolAuthenticated();
+        $this->ensureAgentAuthenticated();
         $requests = $this->childRequestModel->getPendingRequests();
         $this->renderView('admin/child_requests', [
             'requests' => $requests
@@ -24,7 +41,7 @@ class AdminController extends Controller {
     }
 
     public function approveRequest($id = null) {
-        $this->ensureSchoolAuthenticated();
+        $this->ensureAgentAuthenticated();
         if ($id) {
             $this->childRequestModel->approveRequest($id);
         }
@@ -32,7 +49,7 @@ class AdminController extends Controller {
     }
 
     public function rejectRequest($id = null) {
-        $this->ensureSchoolAuthenticated();
+        $this->ensureAgentAuthenticated();
         if ($id) {
             $this->childRequestModel->rejectRequest($id);
         }

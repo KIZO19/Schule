@@ -45,6 +45,8 @@ class AgentController extends Controller {
                     $_SESSION['agent_role_id'] = $agent['role_id'];
                     $_SESSION['agent_role_title'] = $agent['role_title'];
                     $_SESSION['agent_ecole_id'] = $agent['ecole_id'];
+                    $_SESSION['ecole_id'] = $selectedSchoolId;
+                    $_SESSION['ecole_name'] = $school['nom_etablissement'];
                     $this->redirect('/school/Agent/dashboard');
                 }
             }
