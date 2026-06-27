@@ -3,123 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - Gestion Scolaire</title>
+    <title>Inscription Parent - Gestion Scolaire</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1CmYCoPokrB35YqjKM8KJ6xTg+vVKp5JEcT0BSG0sP3VK8jPQ4UMYUDi+AHGp/SxRzPaw8x5Zk6fZx0gd6HAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/assets/css/adminlte.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/assets/css/custom.css">
 </head>
 <body class="hold-transition login-page login-page-brand">
-<div class="login-box">
-    <div class="login-logo text-center">
-        <a href="<?= BASE_URL ?>/" class="text-white"><span class="login-brand-title">SMSys</span><br><small class="text-light">Inscription parent</small></a>
-    </div>
-    <div class="card">
-        <div class="card-body login-card-body">
-            <?php if (!empty($schoolName)): ?>
-                <p class="text-center font-weight-bold mb-2"><?= htmlspecialchars($schoolName) ?></p>
-            <?php endif; ?>
-            <p class="login-box-msg">Créer un compte parent</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10">
+            <div class="login-box mx-auto">
+                <div class="card login-card shadow-lg border-0 rounded-lg overflow-hidden">
+                    <div class="login-card-header text-center text-white py-5" style="background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 100%);">
+                        <div class="mb-3">
+                            <i class="fas fa-user-friends fa-2x"></i>
+                        </div>
+                        <h1 class="mb-1">Inscription Parent</h1>
+                        <p class="mb-0">Créer un compte parent</p>
+                        <?php if (!empty($schoolName)): ?>
+                            <p class="mb-0 mt-2 font-weight-bold text-light"><?= htmlspecialchars($schoolName) ?></p>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-body login-card-body px-4 py-4">
+                        <p class="login-box-msg mb-4">Remplissez le formulaire pour créer votre compte</p>
 
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
+                        <?php if (!empty($error)): ?>
+                            <div class="alert alert-danger rounded-lg py-3"><?= htmlspecialchars($error) ?></div>
+                        <?php endif; ?>
 
-            <form action="<?= BASE_URL ?>/Auth/register" method="post">
-                <div class="input-group mb-3">
-                    <input type="text" name="name" class="form-control" placeholder="Votre nom" value="<?= htmlspecialchars($inputs['name'] ?? '') ?>">
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-user"></span></div>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($inputs['email'] ?? '') ?>">
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-envelope"></span></div>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="text" name="telephone" class="form-control" placeholder="Téléphone" value="<?= htmlspecialchars($inputs['telephone'] ?? '') ?>">
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-phone"></span></div>
-                    </div>
-                </div>
-                <div class="card card-outline card-secondary mb-3">
-                    <div class="card-header">
-                        <h3 class="card-title">Informations sur l'enfant</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="input-group mb-3">
-                            <input type="text" name="child_nom" class="form-control" placeholder="Nom de l'enfant" value="<?= htmlspecialchars($inputs['child_nom'] ?? '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text"><span class="fas fa-id-card"></span></div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" name="child_postnom" class="form-control" placeholder="Postnom de l'enfant" value="<?= htmlspecialchars($inputs['child_postnom'] ?? '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text"><span class="fas fa-id-card"></span></div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" name="child_prenom" class="form-control" placeholder="Prénom de l'enfant" value="<?= htmlspecialchars($inputs['child_prenom'] ?? '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text"><span class="fas fa-id-badge"></span></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="input-group mb-3">
-                                    <select name="child_genre" class="form-control">
-                                        <option value="">Genre</option>
-                                        <option value="M" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'M') ? 'selected' : '' ?>>M</option>
-                                        <option value="F" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'F') ? 'selected' : '' ?>>F</option>
-                                    </select>
+                        <form action="<?= BASE_URL ?>/Auth/register" method="post">
+                            <div class="form-group mb-3">
+                                <label for="name" class="font-weight-bold">Nom</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white border-right-0"><i class="fas fa-user text-secondary"></i></span>
+                                    </div>
+                                    <input id="name" type="text" name="name" class="form-control border-left-0 rounded-right-lg" placeholder="Votre nom" value="<?= htmlspecialchars($inputs['name'] ?? '') ?>" required>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="input-group mb-3">
-                                    <input type="date" name="child_date_naissance" class="form-control" value="<?= htmlspecialchars($inputs['child_date_naissance'] ?? '') ?>">
+                            <div class="form-group mb-3">
+                                <label for="email" class="font-weight-bold">Email</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white border-right-0"><i class="fas fa-envelope text-secondary"></i></span>
+                                    </div>
+                                    <input id="email" type="email" name="email" class="form-control border-left-0 rounded-right-lg" placeholder="Email" value="<?= htmlspecialchars($inputs['email'] ?? '') ?>" required>
                                 </div>
                             </div>
+                            <div class="form-group mb-4">
+                                <label for="telephone" class="font-weight-bold">Téléphone</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white border-right-0"><i class="fas fa-phone text-secondary"></i></span>
+                                    </div>
+                                    <input id="telephone" type="text" name="telephone" class="form-control border-left-0 rounded-right-lg" placeholder="Téléphone" value="<?= htmlspecialchars($inputs['telephone'] ?? '') ?>" required>
+                                </div>
+                            </div>
+
+                            <div class="card card-outline card-secondary mb-3">
+                                <div class="card-header">
+                                    <h3 class="card-title">Informations sur l'enfant</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4 mb-3">
+                                            <label for="child_nom" class="font-weight-bold">Nom</label>
+                                            <input id="child_nom" type="text" name="child_nom" class="form-control" placeholder="Nom" value="<?= htmlspecialchars($inputs['child_nom'] ?? '') ?>" required>
+                                        </div>
+                                        <div class="form-group col-md-4 mb-3">
+                                            <label for="child_postnom" class="font-weight-bold">Postnom</label>
+                                            <input id="child_postnom" type="text" name="child_postnom" class="form-control" placeholder="Postnom" value="<?= htmlspecialchars($inputs['child_postnom'] ?? '') ?>" required>
+                                        </div>
+                                        <div class="form-group col-md-4 mb-3">
+                                            <label for="child_prenom" class="font-weight-bold">Prénom</label>
+                                            <input id="child_prenom" type="text" name="child_prenom" class="form-control" placeholder="Prénom" value="<?= htmlspecialchars($inputs['child_prenom'] ?? '') ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6 mb-3">
+                                            <label for="child_genre" class="font-weight-bold">Genre</label>
+                                            <select id="child_genre" name="child_genre" class="form-control" required>
+                                                <option value="">Sélectionner</option>
+                                                <option value="M" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'M') ? 'selected' : '' ?>>M</option>
+                                                <option value="F" <?= (isset($inputs['child_genre']) && $inputs['child_genre'] === 'F') ? 'selected' : '' ?>>F</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6 mb-3">
+                                            <label for="child_date_naissance" class="font-weight-bold">Date de naissance</label>
+                                            <input id="child_date_naissance" type="date" name="child_date_naissance" class="form-control" value="<?= htmlspecialchars($inputs['child_date_naissance'] ?? '') ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="password" class="font-weight-bold">Mot de passe</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-white border-right-0"><i class="fas fa-lock text-secondary"></i></span>
+                                        </div>
+                                        <input id="password" type="password" name="password" class="form-control border-left-0 rounded-right-lg" placeholder="Mot de passe" required>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="password_confirm" class="font-weight-bold">Confirmer le mot de passe</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-white border-right-0"><i class="fas fa-lock text-secondary"></i></span>
+                                        </div>
+                                        <input id="password_confirm" type="password" name="password_confirm" class="form-control border-left-0 rounded-right-lg" placeholder="Confirmer le mot de passe" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-gradient btn-lg btn-block mb-3">S'inscrire</button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <p class="mb-1">Déjà inscrit ? <a href="<?= BASE_URL ?>/Auth/login">Se connecter</a></p>
+                            <a href="<?= BASE_URL ?>/" class="text-secondary">Changer d'établissement</a>
                         </div>
                     </div>
                 </div>
-                <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Mot de passe">
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-lock"></span></div>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" name="password_confirm" class="form-control" placeholder="Confirmer le mot de passe">
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-lock"></span></div>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12 text-center mb-3">
-                        <small class="text-muted">Entrez les informations ci-dessus pour créer un compte parent sécurisé.</small>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <a href="<?= BASE_URL ?>/" class="text-primary font-weight-bold">J'ai déjà un compte</a>
-                    </div>
-                    <div class="col-12 mt-2 text-right">
-                        <a href="<?= BASE_URL ?>/" class="text-secondary">Changer d'établissement</a>
-                    </div>
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJ+Y3DmFzMSKDTqzISQBej6G8q4U+7kw+v9EE=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcRccM80ILdY4g/s2kW7B1NqI0Ffjjk+N5I9IJyH2" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="<?= BASE_URL ?>/public/assets/js/adminlte.min.js"></script>
 </body>
 </html>
