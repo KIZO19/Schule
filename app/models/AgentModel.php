@@ -55,11 +55,12 @@ class AgentModel {
             'SELECT a.*, r.titre_role AS role_title
              FROM agents a
              JOIN roles_administration r ON a.role_id = r.id
-             WHERE a.ecole_id = :ecole_id AND (a.telephone = :identifier OR a.email = :identifier)
+             WHERE a.ecole_id = :ecole_id AND (a.telephone = :identifier_phone OR a.email = :identifier_email)
              LIMIT 1'
         );
         $stmt->execute([
-            'identifier' => $identifier,
+            'identifier_phone' => $identifier,
+            'identifier_email' => $identifier,
             'ecole_id' => $ecoleId,
         ]);
 

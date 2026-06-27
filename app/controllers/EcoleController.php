@@ -37,13 +37,15 @@ class EcoleController extends Controller {
         $_SESSION['selected_ecole_name'] = $school['nom_etablissement'];
 
         $role = strtolower(trim($_GET['role'] ?? 'parent'));
-        if ($role === 'agent') {
-            $this->redirect('/school/Agent/login');
+        // Utiliser le login unifié pour les parents et le personnel (agents)
+        if (in_array($role, ['agent', 'parent'])) {
+            $this->redirect('/school/Access/login');
         } elseif ($role === 'ecole') {
             $this->redirect('/school/Ecole/login');
         }
 
-        $this->redirect('/school/Auth/login');
+        // Par défaut, rediriger vers le login unifié
+        $this->redirect('/school/Access/login');
     }
 
     public function clearSelection() {
