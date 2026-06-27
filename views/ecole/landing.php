@@ -33,11 +33,8 @@
                         <a href="<?= BASE_URL ?>/Ecole/register" class="btn btn-outline-primary btn-lg btn-block mb-3">
                             <i class="fas fa-user-plus mr-2"></i> Créer un compte école
                         </a>
-                        <a href="<?= BASE_URL ?>/Auth/login" class="btn btn-success btn-lg btn-block">
-                            <i class="fas fa-users mr-2"></i> Espace parent
-                        </a>
                         <hr class="my-4">
-                        <p class="text-muted mb-0">Accédez rapidement à la gestion scolaire et au parcours parent selon votre profil.</p>
+                        <p class="text-muted mb-0">Accédez rapidement à la gestion scolaire pour votre établissement. Les parents doivent se connecter via l’école à laquelle ils sont affectés.</p>
                     </div>
                 </div>
             </div>

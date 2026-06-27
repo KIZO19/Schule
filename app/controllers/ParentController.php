@@ -38,7 +38,7 @@ class ParentController extends Controller {
             $taux_presence = $eleveModel->getPresenceRate($eleveId);
         }
 
-        $this->renderView('parents/enfant_suivi', [
+        $this->renderView('ecole/parents/enfant_suivi', [
             'eleve' => $eleve,
             'compte' => $compte,
             'discipline' => $discipline,

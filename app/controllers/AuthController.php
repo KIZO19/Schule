@@ -50,7 +50,7 @@ class AuthController extends Controller {
             }
         }
 
-        $this->renderView('parents/login', [
+        $this->renderView('ecole/parents/login', [
             'error' => $error,
             'success' => $success,
             'email' => $email,
@@ -135,7 +135,7 @@ class AuthController extends Controller {
             }
         }
 
-        $this->renderView('parents/register', [
+        $this->renderView('ecole/parents/register', [
             'error' => $error,
             'inputs' => $inputs,
         ]);

@@ -49,7 +49,7 @@ class ChildRequestController extends Controller {
             }
         }
 
-        $this->renderView('parents/child_request', [
+        $this->renderView('ecole/parents/child_request', [
             'error' => $error,
             'success' => $success,
             'inputs' => $inputs

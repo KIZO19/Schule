@@ -27,18 +27,31 @@ body{ font-family: var(--font-sans); }
 /* Ensure cards have subtle rounded corners in dark */
 .card { border-radius: 10px; }
 
-body.login-page {
+body.login-page,
+body.register-page {
     background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);
     min-height: 100vh;
+    padding: 1rem 0;
 }
 
 .login-page-brand .wrapper {
     min-height: 100vh;
 }
 
-.login-box {
-    width: 420px;
-    margin: 4.25rem auto;
+.login-box,
+.register-box {
+    width: auto;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+@media (max-width: 767px) {
+    .login-box,
+    .register-box {
+        max-width: 100%;
+        padding: 0 0.75rem;
+    }
 }
 
 .login-logo {
