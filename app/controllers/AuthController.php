@@ -4,15 +4,18 @@
 class AuthController extends Controller {
     private $parentModel;
     private $childRequestModel;
+    private $ecoleModel;
 
     public function __construct() {
         $this->parentModel = $this->loadModel('ParentModel');
         $this->childRequestModel = $this->loadModel('ChildRequestModel');
+        $this->ecoleModel = $this->loadModel('EcoleModel');
     }
 
     public function login() {
-        if (empty($_SESSION['ecole_id'])) {
-            $this->redirect('/school/Ecole/login');
+        $selectedSchoolId = $_SESSION['selected_ecole_id'] ?? null;
+        if (empty($selectedSchoolId)) {
+            $this->redirect('/school/');
         }
 
         if (!empty($_SESSION['parent_id'])) {
@@ -26,6 +29,12 @@ class AuthController extends Controller {
         $success = $_SESSION['success_message'] ?? '';
         unset($_SESSION['success_message']);
 
+        $school = $this->ecoleModel->findById($selectedSchoolId);
+        if (!$school) {
+            unset($_SESSION['selected_ecole_id'], $_SESSION['selected_ecole_name']);
+            $this->redirect('/school/');
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
@@ -33,7 +42,7 @@ class AuthController extends Controller {
             if (empty($email) || empty($password)) {
                 $error = 'Veuillez saisir votre email et votre mot de passe.';
             } else {
-                $parent = $this->parentModel->findByEmail($email, $_SESSION['ecole_id'] ?? null);
+                $parent = $this->parentModel->findByEmail($email, $selectedSchoolId);
 
                 if (!$parent || !password_verify($password, $parent['mot_de_passe'])) {
                     $error = 'Email ou mot de passe incorrect.';
@@ -54,12 +63,14 @@ class AuthController extends Controller {
             'error' => $error,
             'success' => $success,
             'email' => $email,
+            'schoolName' => $school['nom_etablissement'],
         ]);
     }
 
     public function register() {
-        if (empty($_SESSION['ecole_id'])) {
-            $this->redirect('/school/Ecole/login');
+        $selectedSchoolId = $_SESSION['selected_ecole_id'] ?? null;
+        if (empty($selectedSchoolId)) {
+            $this->redirect('/school/');
         }
 
         if (!empty($_SESSION['parent_id'])) {
@@ -92,7 +103,7 @@ class AuthController extends Controller {
                 'date_naissance' => trim($_POST['child_date_naissance'] ?? '')
             ];
 
-            $ecoleId = $_SESSION['ecole_id'] ?? null;
+            $ecoleId = $_SESSION['selected_ecole_id'] ?? null;
             if (empty($inputs['name']) || empty($inputs['email']) || empty($inputs['telephone']) || empty($password) || empty($passwordConfirm)
                 || empty($child['nom']) || empty($child['postnom']) || empty($child['prenom']) || empty($child['genre']) || empty($child['date_naissance'])) {
                 $error = 'Tous les champs parent et enfant sont obligatoires.';
@@ -128,16 +139,23 @@ class AuthController extends Controller {
                     }
 
                     $_SESSION['success_message'] = 'Inscription réussie. La demande d\'enfant a été envoyée à l\'administration.';
-                    $this->redirect('/school/');
+                    $this->redirect('/school/Auth/login');
                 } else {
                     $error = 'Impossible de créer le compte. Réessayez plus tard.';
                 }
             }
         }
 
+        $school = $this->ecoleModel->findById($selectedSchoolId);
+        if (!$school) {
+            unset($_SESSION['selected_ecole_id'], $_SESSION['selected_ecole_name']);
+            $this->redirect('/school/');
+        }
+
         $this->renderView('ecole/parents/register', [
             'error' => $error,
             'inputs' => $inputs,
+            'schoolName' => $school['nom_etablissement'],
         ]);
     }
 

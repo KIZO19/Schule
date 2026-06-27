@@ -9,7 +9,34 @@ class EcoleController extends Controller {
     }
 
     public function landing() {
-        $this->renderView('ecole/landing');
+        $search = trim($_GET['q'] ?? '');
+        $schools = $this->ecoleModel->searchSchools($search);
+
+        $this->renderView('ecole/landing', [
+            'schools' => $schools,
+            'search' => $search,
+        ]);
+    }
+
+    public function select($id = null) {
+        $schoolId = intval($id);
+        if ($schoolId <= 0) {
+            $this->redirect('/school/');
+        }
+
+        $school = $this->ecoleModel->findById($schoolId);
+        if (!$school) {
+            $this->redirect('/school/');
+        }
+
+        $_SESSION['selected_ecole_id'] = $school['id'];
+        $_SESSION['selected_ecole_name'] = $school['nom_etablissement'];
+        $this->redirect('/school/Auth/login');
+    }
+
+    public function clearSelection() {
+        unset($_SESSION['selected_ecole_id'], $_SESSION['selected_ecole_name']);
+        $this->redirect('/school/');
     }
 
     public function login() {

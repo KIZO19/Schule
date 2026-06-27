@@ -16,6 +16,9 @@
     </div>
     <div class="card">
         <div class="card-body login-card-body">
+            <?php if (!empty($schoolName)): ?>
+                <p class="text-center font-weight-bold mb-2"><?= htmlspecialchars($schoolName) ?></p>
+            <?php endif; ?>
             <p class="login-box-msg">Connectez-vous à votre espace parent</p>
 
             <?php if (!empty($success)): ?>
@@ -27,7 +30,7 @@
 
             <form action="<?= BASE_URL ?>/Auth/login" method="post">
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($email) ?>">
+                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($email ?? '') ?>">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-envelope"></span></div>
                     </div>
@@ -47,6 +50,9 @@
                     </div>
                 </div>
             </form>
+            <div class="mt-3 text-right">
+                <a href="<?= BASE_URL ?>/" class="text-secondary">Changer d'établissement</a>
+            </div>
         </div>
     </div>
 </div>

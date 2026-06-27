@@ -17,6 +17,9 @@
     </div>
     <div class="card">
         <div class="card-body login-card-body">
+            <?php if (!empty($schoolName)): ?>
+                <p class="text-center font-weight-bold mb-2"><?= htmlspecialchars($schoolName) ?></p>
+            <?php endif; ?>
             <p class="login-box-msg">Créer un compte parent</p>
 
             <?php if (!empty($error)): ?>
@@ -25,19 +28,19 @@
 
             <form action="<?= BASE_URL ?>/Auth/register" method="post">
                 <div class="input-group mb-3">
-                    <input type="text" name="name" class="form-control" placeholder="Votre nom" value="<?= htmlspecialchars($inputs['name']) ?>">
+                    <input type="text" name="name" class="form-control" placeholder="Votre nom" value="<?= htmlspecialchars($inputs['name'] ?? '') ?>">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-user"></span></div>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($inputs['email']) ?>">
+                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($inputs['email'] ?? '') ?>">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-envelope"></span></div>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" name="telephone" class="form-control" placeholder="Téléphone" value="<?= htmlspecialchars($inputs['telephone']) ?>">
+                    <input type="text" name="telephone" class="form-control" placeholder="Téléphone" value="<?= htmlspecialchars($inputs['telephone'] ?? '') ?>">
                     <div class="input-group-append">
                         <div class="input-group-text"><span class="fas fa-phone"></span></div>
                     </div>
@@ -103,6 +106,9 @@
                 <div class="row">
                     <div class="col-8">
                         <a href="<?= BASE_URL ?>/" class="text-primary font-weight-bold">J'ai déjà un compte</a>
+                    </div>
+                    <div class="col-12 mt-2 text-right">
+                        <a href="<?= BASE_URL ?>/" class="text-secondary">Changer d'établissement</a>
                     </div>
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>

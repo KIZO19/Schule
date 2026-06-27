@@ -26,15 +26,42 @@
                         </div>
                     </div>
                     <div class="col-md-5 p-5 bg-white">
-                        <h3 class="mb-4 text-dark">Choisissez votre accès</h3>
+                        <h3 class="mb-4 text-dark">Choisissez votre établissement</h3>
+                        <form class="mb-4" action="<?= BASE_URL ?>/" method="get">
+                            <div class="input-group input-group-lg shadow-sm">
+                                <input type="search" name="q" class="form-control" placeholder="Rechercher une école" value="<?= htmlspecialchars($search ?? '') ?>">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <?php if (!empty($schools)): ?>
+                            <div class="list-group mb-4">
+                                <?php foreach ($schools as $school): ?>
+                                    <div class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1"><?= htmlspecialchars($school['nom_etablissement']) ?></h5>
+                                            <a href="<?= BASE_URL ?>/Ecole/select/<?= $school['id'] ?>" class="btn btn-sm btn-outline-primary">Choisir</a>
+                                        </div>
+                                        <p class="mb-1 text-muted"><?= htmlspecialchars($school['adresse']) ?></p>
+                                        <small class="text-secondary"><?= htmlspecialchars($school['email_officiel']) ?> · <?= htmlspecialchars($school['telephone_contact']) ?></small>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="alert alert-warning" role="alert">
+                                <?php if (!empty($search)): ?>
+                                    L'école que vous recherchez n'est pas encore en partenariat avec notre système, ou son inscription n'est pas encore finalisée.
+                                <?php else: ?>
+                                    Aucune école active n'est disponible pour le moment.
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                         <a href="<?= BASE_URL ?>/Ecole/login" class="btn btn-primary btn-lg btn-block mb-3">
                             <i class="fas fa-school mr-2"></i> Se connecter comme école
                         </a>
-                        <a href="<?= BASE_URL ?>/Ecole/register" class="btn btn-outline-primary btn-lg btn-block mb-3">
-                            <i class="fas fa-user-plus mr-2"></i> Créer un compte école
-                        </a>
                         <hr class="my-4">
-                        <p class="text-muted mb-0">Accédez rapidement à la gestion scolaire pour votre établissement. Les parents doivent se connecter via l’école à laquelle ils sont affectés.</p>
+                        <p class="text-muted mb-0">Sélectionnez d’abord votre établissement, puis connectez-vous comme parent ou inscrivez-vous pour une validation par l’administration de l’école.</p>
                     </div>
                 </div>
             </div>
