@@ -3,7 +3,7 @@
 
 class App {
     protected $controller = 'EcoleController'; // Contrôleur par défaut, l’authentification école passe en priorité
-    protected $method = 'login';               // Méthode par défaut
+    protected $method = 'landing';             // Méthode par défaut
     protected $params = [];                    // Paramètres optionnels
 
     public function __construct() {

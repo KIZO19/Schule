@@ -8,6 +8,10 @@ class EcoleController extends Controller {
         $this->ecoleModel = $this->loadModel('EcoleModel');
     }
 
+    public function landing() {
+        $this->renderView('ecole/landing');
+    }
+
     public function login() {
         if (!empty($_SESSION['ecole_id'])) {
             $this->redirect('/school/Ecole/dashboard');
