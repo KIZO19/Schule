@@ -27,7 +27,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="card-body login-card-body px-4 py-4">
-                        <p class="login-box-msg mb-4">Connectez-vous avec votre téléphone et mot de passe</p>
+                        <p class="login-box-msg mb-4">Connectez-vous avec votre téléphone ou email et mot de passe</p>
 
                         <?php if (!empty($error)): ?>
                             <div class="alert alert-danger rounded-lg py-3"><?= htmlspecialchars($error) ?></div>
@@ -35,12 +35,12 @@
 
                         <form action="<?= BASE_URL ?>/Agent/login" method="post">
                             <div class="form-group mb-3">
-                                <label for="telephone" class="font-weight-bold">Téléphone</label>
+                                <label for="identifier" class="font-weight-bold">Téléphone ou email</label>
                                 <div class="input-group input-group-lg shadow-sm">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text bg-white border-right-0"><i class="fas fa-phone text-secondary"></i></span>
+                                        <span class="input-group-text bg-white border-right-0"><i class="fas fa-user text-secondary"></i></span>
                                     </div>
-                                    <input id="telephone" type="text" name="telephone" class="form-control border-left-0 rounded-right-lg" placeholder="Téléphone" value="<?= htmlspecialchars($telephone ?? '') ?>" required>
+                                    <input id="identifier" type="text" name="identifier" class="form-control border-left-0 rounded-right-lg" placeholder="Téléphone ou email" value="<?= htmlspecialchars($identifier ?? '') ?>" required>
                                 </div>
                             </div>
                             <div class="form-group mb-4">

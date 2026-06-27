@@ -21,7 +21,7 @@ class AgentController extends Controller {
         }
 
         $error = '';
-        $telephone = '';
+        $identifier = '';
 
         $school = $this->ecoleModel->findById($selectedSchoolId);
         if (!$school) {
@@ -30,15 +30,15 @@ class AgentController extends Controller {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $telephone = trim($_POST['telephone'] ?? '');
+            $identifier = trim($_POST['identifier'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            if (empty($telephone) || empty($password)) {
-                $error = 'Veuillez saisir votre téléphone et votre mot de passe.';
+            if (empty($identifier) || empty($password)) {
+                $error = 'Veuillez saisir votre téléphone ou email et votre mot de passe.';
             } else {
-                $agent = $this->agentModel->findByTelephone($telephone, $selectedSchoolId);
+                $agent = $this->agentModel->findByIdentifier($identifier, $selectedSchoolId);
                 if (!$agent || !isset($agent['mot_de_passe']) || !password_verify($password, $agent['mot_de_passe'])) {
-                    $error = 'Téléphone ou mot de passe incorrect.';
+                    $error = 'Identifiant ou mot de passe incorrect.';
                 } else {
                     $_SESSION['agent_id'] = $agent['id'];
                     $_SESSION['agent_name'] = trim($agent['nom'] . ' ' . $agent['postnom']);
@@ -54,7 +54,7 @@ class AgentController extends Controller {
 
         $this->renderView('agents/login', [
             'error' => $error,
-            'telephone' => $telephone,
+            'identifier' => $identifier,
             'schoolName' => $school['nom_etablissement']
         ]);
     }
