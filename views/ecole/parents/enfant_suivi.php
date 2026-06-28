@@ -1,3 +1,10 @@
+<?php
+$pageTitle = $pageTitle ?? 'Tableau de bord Parent - Gestion Scolaire';
+$metaDescription = $metaDescription ?? 'Suivez facilement le solde, les notes et la présence de votre enfant depuis le tableau de bord parent sécurisé.';
+$ogTitle = $ogTitle ?? $pageTitle;
+$ogDescription = $ogDescription ?? $metaDescription;
+$canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
+?>
 <?php include(__DIR__ . '/../../layout/header.php'); ?>
 <?php include(__DIR__ . '/../../layout/sidebar.php'); ?>
 
@@ -6,13 +13,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Suivi de l'enfant : <?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></h1>
-                    <p class="text-muted">Classe : <?= htmlspecialchars($eleve['nom_classe'] ?? 'Non définie') ?></p>
+                    <h1>Tableau de bord parent</h1>
+                    <p class="text-muted">Suivi scolaire complet pour <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')) ?: 'votre enfant') ?></p>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>">Home</a></li>
-                        <li class="breadcrumb-item active">Suivi</li>
+                        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>">Accueil</a></li>
+                        <li class="breadcrumb-item active">Tableau de bord</li>
                     </ol>
                 </div>
             </div>
@@ -21,11 +28,46 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-12">
-                    <h2 class="mb-4">Tableau de bord — <?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></h2>
+                    <div class="card card-outline card-primary">
+                        <div class="card-body">
+                            <h2 class="h4">Bonjour <?= htmlspecialchars($parentName) ?>,</h2>
+                            <p class="mb-2 text-secondary">Voici un résumé des informations importantes pour accompagner <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')) ?: 'votre enfant') ?>.</p>
+                            <p class="mb-0">Consultez les dernières notes, le solde à payer, le taux de présence et l'état disciplinaire. Ce tableau de bord est conçu pour vous aider à anticiper chaque étape du suivi scolaire.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <?php if (!empty($eleves) && count($eleves) > 1): ?>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">Enfants suivis</h3>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                <?php foreach ($eleves as $child): ?>
+                                    <li class="list-group-item <?= $child['id'] === $eleve['id'] ? 'active text-white' : '' ?>">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong><?= htmlspecialchars(trim(($child['prenom'] ?? '') . ' ' . ($child['nom'] ?? ''))) ?></strong>
+                                                <div class="small text-light">Classe : <?= htmlspecialchars($child['nom_classe'] ?? 'Non définie') ?></div>
+                                            </div>
+                                            <?php if ($child['id'] === $eleve['id']): ?>
+                                                <span class="badge badge-light">Actif</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
@@ -50,7 +92,7 @@
                     <div class="kpi-box kpi-yellow">
                         <div>
                             <div class="kpi-value"><?= number_format($taux_presence ?? 0,1) ?> %</div>
-                            <div class="kpi-desc">Taux de présence (mois)</div>
+                            <div class="kpi-desc">Taux de présence</div>
                         </div>
                         <div class="text-right"><i class="fas fa-user-check fa-2x"></i></div>
                     </div>
@@ -119,7 +161,7 @@
                         </div>
                         <div class="card-body p-0">
                             <div style="height:300px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f7fa,#e9eef6);">
-                                <div class="text-center text-muted">[Map / Graphique]</div>
+                                <div class="text-center text-muted">Graphique de présence à venir</div>
                             </div>
                         </div>
                     </div>
@@ -129,9 +171,10 @@
                             <h3 class="card-title">Résumé</h3>
                         </div>
                         <div class="card-body">
+                            <p><strong>Enfant :</strong> <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?></p>
                             <p><strong>Classe :</strong> <?= htmlspecialchars($eleve['nom_classe'] ?? 'Non définie') ?></p>
-                            <p><strong>Parent :</strong> <?= htmlspecialchars($_SESSION['parent_name'] ?? 'Parent') ?></p>
-                            <p><strong>Solde :</strong> <?= number_format($compte['reste_a_payer'] ?? 0,2) ?> $</p>
+                            <p><strong>Parent :</strong> <?= htmlspecialchars($parentName) ?></p>
+                            <p><strong>Solde actuel :</strong> <?= number_format($compte['reste_a_payer'] ?? 0,2) ?> $</p>
                         </div>
                     </div>
                 </div>
@@ -140,4 +183,4 @@
     </section>
 </div>
 
-<?php include(__DIR__ . '/../layout/footer.php'); ?>
+<?php include(__DIR__ . '/../../layout/footer.php'); ?>

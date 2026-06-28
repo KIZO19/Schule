@@ -36,10 +36,18 @@ class ParentController extends Controller {
 
         $this->renderView('ecole/parents/enfant_suivi', [
             'eleve' => $eleve,
+            'eleves' => $eleves,
             'compte' => $compte,
             'discipline' => $discipline,
             'notes' => $notes,
-            'taux_presence' => $taux_presence
+            'taux_presence' => $taux_presence,
+            'parentName' => $_SESSION['parent_name'] ?? 'Parent',
+            'pageTitle' => 'Tableau de bord parent - ' . trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')),
+            'metaDescription' => 'Accédez au tableau de bord parent pour suivre le solde, les notes et la présence de votre enfant ' . trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')) . '.',
+            'ogTitle' => 'Espace parent - Gestion Scolaire',
+            'ogDescription' => 'Suivi scolaire personnalisé pour les parents : paiements, présence, comportement et évaluations.',
+            'canonicalUrl' => BASE_URL . '/Parent/dashboard',
+            'ogUrl' => BASE_URL . '/Parent/dashboard'
         ]);
     }
 }
