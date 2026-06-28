@@ -1,5 +1,4 @@
-<?php\n// Page non trouvée (404 Not Found)
-?>
+
 <!doctype html>
 <html lang="fr">
 <head>
