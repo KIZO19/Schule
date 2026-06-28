@@ -1,5 +1,5 @@
-<?php include(__DIR__ . '/../layout/header.php'); ?>
-<?php include(__DIR__ . '/../layout/sidebar.php'); ?>
+<?php include(__DIR__ . '/../../layout/header.php'); ?>
+<?php include(__DIR__ . '/../../layout/sidebar.php'); ?>
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -67,4 +67,4 @@
     </section>
 </div>
 
-<?php include(__DIR__ . '/../layout/footer.php'); ?>
+<?php include(__DIR__ . '/../../layout/footer.php'); ?>
