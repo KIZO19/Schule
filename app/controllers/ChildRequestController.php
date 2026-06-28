@@ -11,9 +11,7 @@ class ChildRequestController extends Controller {
     }
 
     public function request() {
-        if (empty($_SESSION['parent_id'])) {
-            $this->redirect('/school/');
-        }
+        $this->ensureParentAuthenticated();
 
         $error = '';
         $success = '';

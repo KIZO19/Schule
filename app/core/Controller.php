@@ -24,14 +24,35 @@ class Controller {
     }
 
     protected function ensureSchoolAuthenticated() {
-        if (empty($_SESSION['ecole_id']) && empty($_SESSION['agent_id'])) {
+        if (empty($_SESSION['ecole_id']) && empty($_SESSION['agent_id']) && empty($_SESSION['parent_id'])) {
             $this->redirect('/school/Ecole/login');
         }
     }
 
     protected function ensureAgentAuthenticated() {
         if (empty($_SESSION['agent_id'])) {
+            if (!empty($_SESSION['parent_id']) || !empty($_SESSION['ecole_id'])) {
+                $this->triggerForbidden();
+            }
             $this->redirect('/school/Agent/login');
+        }
+    }
+
+    protected function ensureParentAuthenticated() {
+        if (empty($_SESSION['parent_id'])) {
+            if (!empty($_SESSION['agent_id']) || !empty($_SESSION['ecole_id'])) {
+                $this->triggerForbidden();
+            }
+            $this->redirect('/school/Auth/login');
+        }
+    }
+
+    protected function ensureEcoleAuthenticated() {
+        if (empty($_SESSION['ecole_id'])) {
+            if (!empty($_SESSION['agent_id']) || !empty($_SESSION['parent_id'])) {
+                $this->triggerForbidden();
+            }
+            $this->redirect('/school/Ecole/login');
         }
     }
 
@@ -88,6 +109,16 @@ class Controller {
             'samesite' => 'Lax'
         ];
         setcookie($name, '', $options);
+    }
+
+    protected function triggerForbidden() {
+        http_response_code(403);
+        if (file_exists(__DIR__ . '/../../views/errors/403.php')) {
+            require_once __DIR__ . '/../../views/errors/403.php';
+        } else {
+            echo "<h1>403 - Accès refusé</h1><p>Vous n'êtes pas autorisé à consulter cette page.</p>";
+        }
+        exit;
     }
 
     // --- Simple session-based rate limiting helpers ---

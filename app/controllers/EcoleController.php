@@ -101,6 +101,7 @@ class EcoleController extends Controller {
                         $this->redirect('/school/Ecole/dashboard');
                     }
                 }
+            }
         }
 
         $this->renderView('ecole/login', [

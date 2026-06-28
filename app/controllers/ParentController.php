@@ -3,11 +3,7 @@
 
 class ParentController extends Controller {
     public function dashboard() {
-        $this->ensureSchoolAuthenticated();
-
-        if (empty($_SESSION['parent_id'])) {
-            $this->redirect('/school/');
-        }
+        $this->ensureParentAuthenticated();
 
         $parentId = $_SESSION['parent_id'];
 
