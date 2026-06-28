@@ -33,6 +33,7 @@
                         <?php endif; ?>
 
                         <form action="<?= BASE_URL ?>/Access/login" method="post">
+                            <input type="hidden" name="csrf_token" value="<?= $this->generateCsrfToken() ?>">
                             <div class="form-group mb-3">
                                 <label for="identifier" class="font-weight-bold">Email ou Téléphone</label>
                                 <div class="input-group input-group-lg shadow-sm">

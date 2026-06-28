@@ -43,12 +43,22 @@ class AccessController extends Controller {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $identifier = trim($_POST['identifier'] ?? '');
-            $password = $_POST['password'] ?? '';
-
-            if (empty($identifier) || empty($password)) {
-                $error = 'Veuillez saisir votre identifiant et votre mot de passe.';
+            // CSRF check
+            $csrf = $_POST['csrf_token'] ?? '';
+            if (!$this->verifyCsrfToken($csrf)) {
+                $error = 'Requête invalide (CSRF).';
             } else {
+                $identifier = trim($_POST['identifier'] ?? '');
+                $password = $_POST['password'] ?? '';
+
+                // Rate limiting: key per IP + identifier
+                $ip = $this->getClientIp();
+                $rateKey = 'login:' . $ip . ':' . md5($identifier);
+                if ($this->isRateLimited($rateKey, 6, 300)) {
+                    $error = 'Trop de tentatives. Réessayez plus tard.';
+                } elseif (empty($identifier) || empty($password)) {
+                    $error = 'Veuillez saisir votre identifiant et votre mot de passe.';
+                } else {
                 $user = $this->userModel->findByIdentifiant($identifier);
                 if (!$user) {
                     // Pas d'utilisateur global; essayer agents/parents directement
@@ -77,12 +87,17 @@ class AccessController extends Controller {
                     }
 
                     // Si échec
+                    $this->incrementRateLimit($rateKey, 6, 300);
                     $error = 'Identifiant ou mot de passe incorrect.';
                 } else {
                     // On a trouvé un enregistrement dans `utilisateurs`.
                     if (!isset($user['mot_de_passe']) || !password_verify($password, $user['mot_de_passe'])) {
                         $error = 'Identifiant ou mot de passe incorrect.';
                     } else {
+                        // Regenerate session id on successful login
+                        session_regenerate_id(true);
+                        // Clear rate limit for this identifier on success
+                        $this->clearRateLimit($rateKey);
                         // Charger les données de référence selon le rôle
                         $ref = $this->userModel->findByReference($user['reference_id'], $user['role'], $user['ecole_id']);
 
@@ -131,6 +146,7 @@ class AccessController extends Controller {
                                 break;
                         }
 
+                        $this->incrementRateLimit($rateKey, 6, 300);
                         $error = 'Identifiant ou mot de passe incorrect.';
                     }
                 }
@@ -145,6 +161,8 @@ class AccessController extends Controller {
     }
 
     public function logout() {
+        // Clear session cookie and server-side session
+        $this->clearSecureCookie(session_name());
         session_unset();
         session_destroy();
         $this->redirect('/school/');

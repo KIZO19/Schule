@@ -49,6 +49,7 @@
                             </div>
                             <button type="submit" class="btn btn-gradient btn-lg btn-block mb-3">Se connecter</button>
                         </form>
+                        <input type="hidden" name="csrf_token" value="<?= $this->generateCsrfToken() ?>">
                         <div class="text-center mt-3">
                             <p class="mb-0">Pas encore d'établissement ? <a href="<?= BASE_URL ?>/Ecole/register">Créer un compte école</a></p>
                         </div>

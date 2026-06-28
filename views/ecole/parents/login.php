@@ -57,6 +57,7 @@
                             </div>
                             <button type="submit" class="btn btn-gradient btn-lg btn-block mb-3">Se connecter</button>
                         </form>
+                        <input type="hidden" name="csrf_token" value="<?= $this->generateCsrfToken() ?>">
                         <div class="text-center mt-3">
                             <p class="mb-1">Pas encore de compte parent ? <a href="<?= BASE_URL ?>/Auth/register">S'inscrire</a></p>
                             <a href="<?= BASE_URL ?>/" class="text-secondary">Changer d'établissement</a>

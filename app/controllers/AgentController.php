@@ -33,13 +33,22 @@ class AgentController extends Controller {
             $identifier = trim($_POST['identifier'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            if (empty($identifier) || empty($password)) {
+            // Rate limiting per IP + identifier
+            $ip = $this->getClientIp();
+            $rateKey = 'agent_login:' . $ip . ':' . md5($identifier);
+            if ($this->isRateLimited($rateKey, 6, 300)) {
+                $error = 'Trop de tentatives. Réessayez plus tard.';
+            } elseif (empty($identifier) || empty($password)) {
                 $error = 'Veuillez saisir votre téléphone ou email et votre mot de passe.';
             } else {
                 $agent = $this->agentModel->findByIdentifier($identifier, $selectedSchoolId);
                 if (!$agent || !isset($agent['mot_de_passe']) || !password_verify($password, $agent['mot_de_passe'])) {
+                    $this->incrementRateLimit($rateKey, 6, 300);
                     $error = 'Identifiant ou mot de passe incorrect.';
                 } else {
+                    // Successful login: regenerate id and clear rate limiter
+                    session_regenerate_id(true);
+                    $this->clearRateLimit($rateKey);
                     $_SESSION['agent_id'] = $agent['id'];
                     $_SESSION['agent_name'] = trim($agent['nom'] . ' ' . $agent['postnom']);
                     $_SESSION['agent_role_id'] = $agent['role_id'];
@@ -88,6 +97,8 @@ class AgentController extends Controller {
     }
 
     public function logout() {
+        // Clear session cookie and server-side session
+        $this->clearSecureCookie(session_name());
         session_unset();
         session_destroy();
         $this->redirect('/school/');

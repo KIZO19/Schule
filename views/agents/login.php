@@ -43,6 +43,7 @@
                                     <input id="identifier" type="text" name="identifier" class="form-control border-left-0 rounded-right-lg" placeholder="Téléphone ou email" value="<?= htmlspecialchars($identifier ?? '') ?>" required>
                                 </div>
                             </div>
+                            <input type="hidden" name="csrf_token" value="<?= $this->generateCsrfToken() ?>">
                             <div class="form-group mb-4">
                                 <label for="password" class="font-weight-bold">Mot de passe</label>
                                 <div class="input-group input-group-lg shadow-sm">

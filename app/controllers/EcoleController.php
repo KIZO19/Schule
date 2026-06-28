@@ -71,24 +71,36 @@ class EcoleController extends Controller {
         $email = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
-
-            if (empty($email) || empty($password)) {
-                $error = 'Veuillez saisir votre email et votre mot de passe.';
+            $csrf = $_POST['csrf_token'] ?? '';
+            if (!$this->verifyCsrfToken($csrf)) {
+                $error = 'Requête invalide (CSRF).';
             } else {
-                $ecole = $this->ecoleModel->findByEmail($email);
-                if (!$ecole || !isset($ecole['mot_de_passe']) || !password_verify($password, $ecole['mot_de_passe'])) {
-                    $error = 'Email ou mot de passe incorrect.';
-                } elseif ($ecole['statut_systeme'] !== 'Actif') {
-                    $error = 'Votre établissement n’est pas encore actif.';
+                $email = trim($_POST['email'] ?? '');
+                $password = $_POST['password'] ?? '';
+
+                // Rate limiting per IP + identifier
+                $ip = $this->getClientIp();
+                $rateKey = 'ecole_login:' . $ip . ':' . md5($email);
+                if ($this->isRateLimited($rateKey, 6, 300)) {
+                    $error = 'Trop de tentatives. Réessayez plus tard.';
+                } elseif (empty($email) || empty($password)) {
+                    $error = 'Veuillez saisir votre email et votre mot de passe.';
                 } else {
-                    $_SESSION['ecole_id'] = $ecole['id'];
-                    $_SESSION['ecole_name'] = $ecole['nom_etablissement'];
-                    $_SESSION['ecole_email'] = $ecole['email_officiel'];
-                    $this->redirect('/school/Ecole/dashboard');
+                    $ecole = $this->ecoleModel->findByEmail($email);
+                    if (!$ecole || !isset($ecole['mot_de_passe']) || !password_verify($password, $ecole['mot_de_passe'])) {
+                        $this->incrementRateLimit($rateKey, 6, 300);
+                        $error = 'Email ou mot de passe incorrect.';
+                    } elseif ($ecole['statut_systeme'] !== 'Actif') {
+                        $error = 'Votre établissement n’est pas encore actif.';
+                    } else {
+                        session_regenerate_id(true);
+                        $this->clearRateLimit($rateKey);
+                        $_SESSION['ecole_id'] = $ecole['id'];
+                        $_SESSION['ecole_name'] = $ecole['nom_etablissement'];
+                        $_SESSION['ecole_email'] = $ecole['email_officiel'];
+                        $this->redirect('/school/Ecole/dashboard');
+                    }
                 }
-            }
         }
 
         $this->renderView('ecole/login', [
@@ -172,6 +184,8 @@ class EcoleController extends Controller {
     }
 
     public function logout() {
+        // Clear session cookie and server-side session
+        $this->clearSecureCookie(session_name());
         session_unset();
         session_destroy();
         $this->redirect('/school/Ecole/login');

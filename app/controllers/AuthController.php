@@ -36,27 +36,40 @@ class AuthController extends Controller {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
-
-            if (empty($email) || empty($password)) {
-                $error = 'Veuillez saisir votre email et votre mot de passe.';
+            $csrf = $_POST['csrf_token'] ?? '';
+            if (!$this->verifyCsrfToken($csrf)) {
+                $error = 'Requête invalide (CSRF).';
             } else {
-                $parent = $this->parentModel->findByEmail($email, $selectedSchoolId);
+                $email = trim($_POST['email'] ?? '');
+                $password = $_POST['password'] ?? '';
 
-                if (!$parent || !password_verify($password, $parent['mot_de_passe'])) {
-                    $error = 'Email ou mot de passe incorrect.';
-                } elseif ($this->childRequestModel->findPendingByParent($parent['id']) && !$this->parentModel->hasChildren($parent['id'])) {
-                    $error = 'Votre demande d\'enfant est en attente de validation par l\'administration.';
-                } elseif (!$this->parentModel->hasChildren($parent['id'])) {
-                    $error = 'Votre compte n\'est pas valide tant qu\'un enfant n\'est pas approuvé.';
+                // Rate limiting per IP + identifier
+                $ip = $this->getClientIp();
+                $rateKey = 'parent_login:' . $ip . ':' . md5($email);
+                if ($this->isRateLimited($rateKey, 6, 300)) {
+                    $error = 'Trop de tentatives. Réessayez plus tard.';
+                } elseif (empty($email) || empty($password)) {
+                    $error = 'Veuillez saisir votre email et votre mot de passe.';
                 } else {
-                    $_SESSION['parent_id'] = $parent['id'];
-                    $_SESSION['parent_name'] = $parent['nom_responsable'];
-                    $_SESSION['parent_email'] = $parent['email'];
-                    $this->redirect('/school/Parent/dashboard');
+                    $parent = $this->parentModel->findByEmail($email, $selectedSchoolId);
+
+                    if (!$parent || !password_verify($password, $parent['mot_de_passe'])) {
+                        $this->incrementRateLimit($rateKey, 6, 300);
+                        $error = 'Email ou mot de passe incorrect.';
+                    } elseif ($this->childRequestModel->findPendingByParent($parent['id']) && !$this->parentModel->hasChildren($parent['id'])) {
+                        $error = 'Votre demande d\'enfant est en attente de validation par l\'administration.';
+                    } elseif (!$this->parentModel->hasChildren($parent['id'])) {
+                        $error = 'Votre compte n\'est pas valide tant qu\'un enfant n\'est pas approuvé.';
+                    } else {
+                        // Successful login
+                        session_regenerate_id(true);
+                        $this->clearRateLimit($rateKey);
+                        $_SESSION['parent_id'] = $parent['id'];
+                        $_SESSION['parent_name'] = $parent['nom_responsable'];
+                        $_SESSION['parent_email'] = $parent['email'];
+                        $this->redirect('/school/Parent/dashboard');
+                    }
                 }
-            }
         }
 
         $this->renderView('ecole/parents/login', [
@@ -160,6 +173,8 @@ class AuthController extends Controller {
     }
 
     public function logout() {
+        // Clear session cookie and server-side session
+        $this->clearSecureCookie(session_name());
         session_unset();
         session_destroy();
         $this->redirect('/school/Ecole/login');
