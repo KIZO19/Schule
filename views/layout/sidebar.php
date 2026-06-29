@@ -36,7 +36,7 @@ $isActive = function($uri) use ($currentRoute) {
     $avatarLetter = strtoupper(substr($userName, 0, 1));
     ?>
 
-    <div class="sidebar">
+    <div class="sidebar-wrapper">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <span class="img-circle elevation-2 bg-secondary d-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;color:#fff;font-size:1.1rem;">
@@ -49,8 +49,8 @@ $isActive = function($uri) use ($currentRoute) {
             </div>
         </div>
 
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <nav class="mt-2" aria-label="Main navigation">
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
                 <?php if ($sessionType === 'parent'): ?>
                     <li class="nav-item">
                         <a href="<?= BASE_URL ?>/Parent/dashboard" class="nav-link <?= $isActive('/Parent/dashboard') ?>">
@@ -58,12 +58,12 @@ $isActive = function($uri) use ($currentRoute) {
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item has-treeview <?= $isActive('/Parent') ? 'menu-open' : '' ?>">
+                    <li class="nav-item <?= $isActive('/Parent') ? 'menu-open' : '' ?>">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>
                                 Enfants
-                                <i class="right fas fa-angle-left"></i>
+                                <i class="nav-arrow bi bi-chevron-right"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
