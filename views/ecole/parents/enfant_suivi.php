@@ -8,26 +8,27 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
 <?php include(__DIR__ . '/../../layout/header.php'); ?>
 <?php include(__DIR__ . '/../../layout/sidebar.php'); ?>
 
-<div class="content-wrapper">
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Tableau de bord parent</h1>
-                    <p class="text-muted">Retrouvez ici le suivi scolaire, les paiements et les évaluations de <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?>.</p>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>">Accueil</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
+<main class="app-main">
+    <div class="app-content">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Tableau de bord parent</h1>
+                        <p class="text-muted">Retrouvez ici le suivi scolaire, les paiements et les évaluations de <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?>.</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="<?= BASE_URL ?>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="content">
-        <div class="container-fluid py-4">
+        <section class="content">
+            <div class="container-fluid py-4">
             <div class="row justify-content-center">
                 <div class="col-xl-10">
                     <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
@@ -181,8 +182,9 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
                 </div>
             </div>
             <?php endif; ?>
-        </div>
-    </section>
-</div>
+            </div>
+        </section>
+    </div>
+</main>
 
 <?php include(__DIR__ . '/../../layout/footer.php'); ?>

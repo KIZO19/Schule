@@ -5,9 +5,9 @@ $isActive = function($uri) use ($currentRoute) {
     return strpos($currentRoute, trim($uri, '/')) === 0 ? 'active' : '';
 };
 ?>
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="app-sidebar sidebar-dark-primary elevation-4">
     <?php $siteLabel = $_SESSION['selected_ecole_name'] ?? $_SESSION['ecole_name'] ?? 'SMSys'; ?>
-    <a href="<?= BASE_URL ?>" class="brand-link">
+    <a href="<?= BASE_URL ?>" class="brand-link sidebar-brand">
         <span class="brand-image img-circle elevation-3 bg-white text-primary d-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
             <i class="fas fa-school"></i>
         </span>
@@ -36,7 +36,7 @@ $isActive = function($uri) use ($currentRoute) {
     $avatarLetter = strtoupper(substr($userName, 0, 1));
     ?>
 
-    <div class="sidebar">
+    <div class="sidebar sidebar-wrapper">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <span class="img-circle elevation-2 bg-secondary d-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;color:#fff;font-size:1.1rem;">

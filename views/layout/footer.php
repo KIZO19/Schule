@@ -1,4 +1,4 @@
-<footer class="main-footer">
+<footer class="app-footer">
     <div class="float-right d-none d-sm-inline">
         Version 1.0.0
     </div>

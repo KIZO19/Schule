@@ -53,9 +53,9 @@
         }
     </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-<div class="wrapper">
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<body class="hold-transition sidebar-expand layout-fixed">
+<div class="app-wrapper">
+    <nav class="app-header navbar navbar-expand navbar-white navbar-light">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"><i class="fas fa-bars"></i></a>
