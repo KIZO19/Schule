@@ -8,65 +8,73 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
 <?php include(__DIR__ . '/../../layout/header.php'); ?>
 <?php include(__DIR__ . '/../../layout/sidebar.php'); ?>
 
-<main class="app-main">
-    <div class="app-content-header">
+<div class="content-wrapper">
+    <section class="content-header">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Dashboard Parent</h3>
+                    <h1>Dashboard Parent</h1>
                     <p class="text-muted">Tableau de bord pédagogique et financier pour <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')) ?: 'votre enfant') ?>.</p>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
+                    <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>">Accueil</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                        <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="app-content">
+    <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-info">
+                    <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?= number_format($compte['reste_a_payer'] ?? 0, 2) ?> $</h3>
                             <p>Reste à payer</p>
                         </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2 7.5A2.5 2.5 0 014.5 5h15a2.5 2.5 0 012.5 2.5v9a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 16.5v-9z"></path></svg>
-                        <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Voir le détail <i class="bi bi-arrow-right"></i></a>
+                        <div class="icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Voir le détail <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-success">
+                    <div class="small-box bg-success">
                         <div class="inner">
                             <h3><?= isset($discipline['PointsRetires']) ? ('-'.intval($discipline['PointsRetires'])) : '0' ?></h3>
                             <p>Points disciplinaires</p>
                         </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 21h6v-2H9v2zm3-20C6.48 1 2 5.48 2 11s4.48 10 10 10 10-4.48 10-10S17.52 1 12 1zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
-                        <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Voir le détail <i class="bi bi-arrow-right"></i></a>
+                        <div class="icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Voir le détail <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-warning">
+                    <div class="small-box bg-warning">
                         <div class="inner">
                             <h3><?= number_format($taux_presence ?? 0, 1) ?>%</h3>
                             <p>Taux de présence</p>
                         </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-2h2zm0-4h-2V7h2z"></path></svg>
-                        <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Voir le détail <i class="bi bi-arrow-right"></i></a>
+                        <div class="icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Voir le détail <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-danger">
+                    <div class="small-box bg-danger">
                         <div class="inner">
                             <h3><?= !empty($notes) ? count($notes) : 0 ?></h3>
                             <p>Dernières évaluations</p>
                         </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm14 4H5v10h14zm-2 2h-3v6h3zm-5 0H9v6h3z"></path></svg>
-                        <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Voir le détail <i class="bi bi-arrow-right"></i></a>
+                        <div class="icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Voir le détail <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -218,7 +226,7 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
             </div>
             <?php endif; ?>
         </div>
-    </div>
-</main>
+    </section>
+</div>
 
 <?php include(__DIR__ . '/../../layout/footer.php'); ?>

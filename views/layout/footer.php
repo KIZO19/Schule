@@ -7,6 +7,7 @@
 </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3H4+VgCvkYF6aiIyY7zoZPPOqj3CxXQDDs0lZ4YhKRTtOCaM9NMt+VlG+KyC2xv" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/OverlayScrollbars.min.js" crossorigin="anonymous"></script>
 <script src="<?= BASE_URL ?>/public/assets/js/adminlte.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -14,6 +15,7 @@
 		const body = document.body;
 		const btn = document.getElementById('theme-toggle-btn');
 		const icon = document.getElementById('theme-toggle-icon');
+		const STORAGE_KEY = 'lte-theme';
 
 		function applyTheme(theme) {
 			if (theme === 'dark') {
@@ -25,11 +27,12 @@
 				if(icon) { icon.className = 'fas fa-moon'; }
 				if(btn) btn.setAttribute('aria-pressed','false');
 			}
+			document.documentElement.setAttribute('data-bs-theme', theme);
+			document.documentElement.style.colorScheme = theme;
 		}
 
-		// Determine initial theme: user preference -> localStorage -> system
 		let stored = null;
-		try { stored = localStorage.getItem('theme'); } catch(e) { stored = null; }
+		try { stored = localStorage.getItem(STORAGE_KEY); } catch(e) { stored = null; }
 
 		if (stored) {
 			applyTheme(stored);
@@ -42,7 +45,7 @@
 				const isDark = body.classList.contains('dark-mode');
 				const next = isDark ? 'light' : 'dark';
 				applyTheme(next);
-				try { localStorage.setItem('theme', next); } catch(e){}
+				try { localStorage.setItem(STORAGE_KEY, next); } catch(e){}
 			});
 		}
 	})();
@@ -67,23 +70,6 @@ if (typeof Chart !== 'undefined'){
 		});
 	}
 }
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function(e){
-                e.preventDefault();
-                document.body.classList.toggle('sidebar-open');
-            });
-        }
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', function(){
-                document.body.classList.remove('sidebar-open');
-            });
-        }
-    });
 </script>
 </body>
 </html>
