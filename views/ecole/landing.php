@@ -36,6 +36,18 @@
                             </div>
                         </div>
                         <div class="table-responsive mb-4" id="schoolsWrapper" style="display: <?= $search !== '' ? 'block' : 'none'; ?>;">
+                            <div id="searchSummary" class="mb-2">
+                                <?php if ($search !== '' && $totalSchools > 0): ?>
+                                    <?php if (!$showAll && $totalSchools > 2): ?>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>Affichage de 2 sur <?= $totalSchools ?> résultats.</div>
+                                            <a href="<?= BASE_URL ?>/Ecole/landing?q=<?= rawurlencode($search) ?>&all=1" class="btn btn-link p-0">Voir tout</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div><?= $totalSchools ?> résultat<?= $totalSchools > 1 ? 's' : '' ?> trouvé<?= $totalSchools > 1 ? 's' : '' ?>.</div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
                             <table class="table table-hover table-borderless" id="schoolsTable">
                                 <thead class="thead-light">
                                     <tr>
@@ -72,11 +84,11 @@
                         <a href="<?= BASE_URL ?>/Ecole/login" class="btn btn-primary btn-lg btn-block mb-3">
                             <i class="fas fa-school mr-2"></i> Connexion établissement
                         </a>
-                        <div class="alert alert-info" role="alert">
+                        <!-- <div class="alert alert-info" role="alert">
                             Après avoir choisi une école dans la liste, vous pourrez vous connecter en tant que parent ou personnel.
-                        </div>
+                        </div> -->
                         <hr class="my-4">
-                        <p class="text-muted mb-0">Sélectionnez d’abord votre établissement, puis choisissez le type de connexion.</p>
+                        <!-- <p class="text-muted mb-0">Sélectionnez d’abord votre établissement, puis choisissez le type de connexion.</p> -->
                     </div>
                 </div>
             </div>
@@ -89,6 +101,7 @@
     const searchInput = document.getElementById('schoolSearch');
     const searchButton = document.getElementById('searchButton');
     const schoolsBody = document.getElementById('schoolsBody');
+    const searchSummary = document.getElementById('searchSummary');
     const searchFeedback = document.getElementById('searchFeedback');
 
     let searchTimer;
@@ -99,6 +112,7 @@
         wrapper.style.display = 'block';
 
         if (!schools || schools.length === 0) {
+            searchSummary.innerHTML = '';
             searchFeedback.innerHTML = `
                 <div class="alert alert-warning" role="alert">
                     ${query ? 'L\'école que vous recherchez n\'est pas encore en partenariat avec notre système, ou son inscription n\'est pas encore finalisée.' : 'Aucune école active n\'est disponible pour le moment.'}
@@ -108,8 +122,10 @@
         }
 
         searchFeedback.innerHTML = '';
+        searchSummary.innerHTML = renderSummary(schools.length, query);
 
-        schools.forEach(school => {
+        const visibleSchools = schools.slice(0, 2);
+        visibleSchools.forEach(school => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${escapeHtml(school.nom_etablissement)}</td>
@@ -117,6 +133,23 @@
             `;
             schoolsBody.appendChild(row);
         });
+    }
+
+    function renderSummary(count, query) {
+        if (!query || count === 0) {
+            return '';
+        }
+
+        if (count > 2) {
+            return `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>Affichage de 2 sur ${count} résultats.</div>
+                    <a href="<?= BASE_URL ?>/Ecole/landing?q=${encodeURIComponent(query)}&all=1" class="btn btn-link p-0">Voir tout</a>
+                </div>
+            `;
+        }
+
+        return `<div>${count} résultat${count > 1 ? 's' : ''} trouvé${count > 1 ? 's' : ''}.</div>`;
     }
 
     function escapeHtml(text) {

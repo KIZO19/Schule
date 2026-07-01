@@ -10,15 +10,24 @@ class EcoleController extends Controller {
 
     public function landing() {
         $search = trim($_GET['q'] ?? '');
+        $showAll = isset($_GET['all']) && $_GET['all'] === '1';
         $schools = [];
+        $totalSchools = 0;
 
         if ($search !== '') {
             $schools = $this->ecoleModel->searchSchools($search);
+            $totalSchools = count($schools);
+
+            if (!$showAll) {
+                $schools = array_slice($schools, 0, 2);
+            }
         }
 
         $this->renderView('ecole/landing', [
             'schools' => $schools,
             'search' => $search,
+            'totalSchools' => $totalSchools,
+            'showAll' => $showAll,
         ]);
     }
 
