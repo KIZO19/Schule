@@ -13,8 +13,8 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Dashboard Parent</h1>
-                    <p class="text-muted">Tableau de bord pédagogique et financier pour <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')) ?: 'votre enfant') ?>.</p>
+                    <h1>Tableau de bord parent</h1>
+                    <p class="text-muted">Retrouvez ici le suivi scolaire, les paiements et les évaluations de <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?>.</p>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -27,8 +27,49 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
     </section>
 
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
+        <div class="container-fluid py-4">
+            <div class="row justify-content-center">
+                <div class="col-xl-10">
+                    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                        <div class="row g-0 align-items-stretch">
+                            <div class="col-md-7 p-5 text-white" style="background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 100%);">
+                                <h1 class="display-5 fw-bold">Bienvenue, <?= htmlspecialchars($_SESSION['parent_name'] ?? 'Parent') ?> !</h1>
+                                <p class="lead mb-4">Accédez en un clic à toutes les informations de votre enfant, de la présence aux paiements.</p>
+                                <div class="d-flex flex-wrap gap-2 mb-4">
+                                    <span class="badge bg-light text-primary py-2 px-3"><i class="fas fa-user-graduate me-2"></i>Suivi élève</span>
+                                    <span class="badge bg-light text-primary py-2 px-3"><i class="fas fa-wallet me-2"></i>Paiements</span>
+                                    <span class="badge bg-light text-primary py-2 px-3"><i class="fas fa-chart-line me-2"></i>Présence</span>
+                                </div>
+                                <p class="mb-0">Dernière mise à jour : <?= date('d/m/Y H:i') ?></p>
+                            </div>
+                            <div class="col-md-5 p-4 bg-white">
+                                <div class="mb-4">
+                                    <h3 class="h5 text-dark">Résumé rapide</h3>
+                                    <p class="text-muted">Statistiques clés pour <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?>.</p>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Reste à payer</span>
+                                        <strong><?= number_format($compte['reste_a_payer'] ?? 0, 2) ?> $</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Taux de présence</span>
+                                        <strong><?= number_format($taux_presence ?? 0, 1) ?>%</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Points disciplinaires</span>
+                                        <strong><?= isset($discipline['PointsRetires']) ? intval($discipline['PointsRetires']) : 0 ?></strong>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-primary btn-lg w-100 mb-3">Voir le suivi détaillé</a>
+                                <a href="#" class="btn btn-outline-secondary btn-lg w-100">Voir les factures</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -79,15 +120,11 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-7 connectedSortable">
+            <div class="row mt-3">
+                <div class="col-lg-7">
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Progression des notes</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                            </div>
                         </div>
                         <div class="card-body">
                             <div class="chart">
@@ -95,105 +132,24 @@ $canonicalUrl = $canonicalUrl ?? (BASE_URL . '/Parent/dashboard');
                             </div>
                         </div>
                     </div>
-
-                    <div class="card direct-chat direct-chat-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Notifications</h3>
-                            <div class="card-tools">
-                                <span title="2 nouveaux messages" class="badge badge-primary">2</span>
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="direct-chat-messages" style="max-height: 260px; overflow-y:auto;">
-                                <div class="direct-chat-msg">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-left">École</span>
-                                        <span class="direct-chat-timestamp float-right">09:30</span>
-                                    </div>
-                                    <img class="direct-chat-img" src="<?= BASE_URL ?>/public/assets/img/user2-160x160.jpg" alt="User Image">
-                                    <div class="direct-chat-text">Le paiement du trimestre a bien été reçu.</div>
-                                </div>
-                                <div class="direct-chat-msg right">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-right"><?= htmlspecialchars($parentName) ?></span>
-                                        <span class="direct-chat-timestamp float-left">09:35</span>
-                                    </div>
-                                    <img class="direct-chat-img" src="<?= BASE_URL ?>/public/assets/img/user1-128x128.jpg" alt="Parent Image">
-                                    <div class="direct-chat-text">Merci, je veux voir le calendrier des réunions.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <form action="#" method="post">
-                                <div class="input-group">
-                                    <input type="text" name="message" placeholder="Écrire un message..." class="form-control">
-                                    <span class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
-
-                <div class="col-lg-5 connectedSortable">
+                <div class="col-lg-5">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Carte de présence</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                            </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="d-flex justify-content-center align-items-center" style="height: 260px; background: linear-gradient(135deg, #3c8dbc 0%, #00c0ef 100%); border-radius: .25rem;">
-                                <span class="text-white font-weight-bold">Carte de présence</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-4 text-center border-right">
-                                    <div class="description-block">
-                                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> <?= number_format($taux_presence ?? 0,1) ?>%</span>
-                                        <h5 class="description-header"><?= number_format($taux_presence ?? 0,1) ?>%</h5>
-                                        <span class="description-text">Présence</span>
-                                    </div>
-                                </div>
-                                <div class="col-4 text-center border-right">
-                                    <div class="description-block">
-                                        <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> <?= !empty($notes) ? min(100, floor(count($notes) * 2)) : 0 ?>%</span>
-                                        <h5 class="description-header"><?= !empty($notes) ? count($notes) : 0 ?></h5>
-                                        <span class="description-text">Évaluations</span>
-                                    </div>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <div class="description-block">
-                                        <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> <?= isset($discipline['PointsRetires']) ? intval($discipline['PointsRetires']) : 0 ?> pts</span>
-                                        <h5 class="description-header"><?= isset($discipline['PointsRetires']) ? intval($discipline['PointsRetires']) : 0 ?></h5>
-                                        <span class="description-text">Discipline</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card card-success">
-                        <div class="card-header">
-                            <h3 class="card-title">Résumé rapide</h3>
+                            <h3 class="card-title">Résumé du profil</h3>
                         </div>
                         <div class="card-body">
                             <p><strong>Enfant :</strong> <?= htmlspecialchars(trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? ''))) ?></p>
                             <p><strong>Classe :</strong> <?= htmlspecialchars($eleve['nom_classe'] ?? 'Non définie') ?></p>
                             <p><strong>Parent :</strong> <?= htmlspecialchars($parentName) ?></p>
-                            <p><strong>Solde :</strong> <?= number_format($compte['reste_a_payer'] ?? 0,2) ?> $</p>
+                            <p><strong>Solde :</strong> <?= number_format($compte['reste_a_payer'] ?? 0, 2) ?> $</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <?php if (!empty($eleves) && count($eleves) > 1): ?>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-12">
                     <div class="card card-secondary">
                         <div class="card-header">

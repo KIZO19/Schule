@@ -70,8 +70,7 @@ class AuthController extends Controller {
                         $this->redirect('/school/Parent/dashboard');
                     }
                 }
-        }
-
+            }        }
         $this->renderView('ecole/parents/login', [
             'error' => $error,
             'success' => $success,
