@@ -56,7 +56,17 @@
 <body class="hold-transition sidebar-expand layout-fixed">
 <div class="app-wrapper">
     <nav class="app-header navbar navbar-expand navbar-white navbar-light">
-        <ul class="navbar-nav">
+        <?php
+        $dashboardUrl = BASE_URL;
+        if (!empty($_SESSION['agent_id'])) {
+            $dashboardUrl = BASE_URL . '/Agent/dashboard';
+        } elseif (!empty($_SESSION['parent_id'])) {
+            $dashboardUrl = BASE_URL . '/Parent/dashboard';
+        } elseif (!empty($_SESSION['ecole_id'])) {
+            $dashboardUrl = BASE_URL . '/Ecole/dashboard';
+        }
+    ?>
+    <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
@@ -64,7 +74,7 @@
                 <a href="<?= BASE_URL ?>" class="nav-link">Accueil</a>
             </li>
             <li class="nav-item d-none d-md-inline-block">
-                <a href="<?= BASE_URL ?>/Parent/dashboard" class="nav-link">Tableau de bord</a>
+                <a href="<?= $dashboardUrl ?>" class="nav-link">Tableau de bord</a>
             </li>
         </ul>
         <ul class="navbar-nav ms-auto align-items-center">

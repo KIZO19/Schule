@@ -82,17 +82,70 @@ class AgentController extends Controller {
 
         $roleTitle = $agent['role_title'] ?? 'Personnel';
         $dashboardType = 'default';
+        $dashboardHeader = 'Accédez à vos fonctionnalités selon votre rôle au sein de l\'école.';
+        $dashboardCards = [];
 
         if (in_array($agent['role_id'], [1, 2, 3, 4, 5])) {
             $dashboardType = 'management';
+            $dashboardHeader = 'Utilisez ce tableau de bord pour gérer les demandes, le personnel et les opérations de l\'établissement.';
+            $dashboardCards = [
+                [
+                    'icon' => 'fa-user-check',
+                    'bg' => 'bg-info',
+                    'title' => 'Demandes d\'enfants',
+                    'text' => 'Traitez les demandes d\'inscription et validez les nouveaux dossiers.',
+                    'link' => BASE_URL . '/Admin/childRequests',
+                    'linkText' => 'Voir les demandes'
+                ],
+                [
+                    'icon' => 'fa-users',
+                    'bg' => 'bg-success',
+                    'title' => 'Gestion du personnel',
+                    'text' => 'Suivez les rôles et l’organisation de l’équipe pédagogique.',
+                    'link' => '#',
+                    'linkText' => 'Voir le personnel'
+                ]
+            ];
         } elseif (in_array($agent['role_id'], [6, 7])) {
             $dashboardType = 'teaching';
+            $dashboardHeader = 'Utilisez ce tableau de bord pour suivre vos classes, préparer vos évaluations et enregistrer les présences.';
+            $dashboardCards = [
+                [
+                    'icon' => 'fa-chalkboard-teacher',
+                    'bg' => 'bg-primary',
+                    'title' => 'Mon planning',
+                    'text' => 'Consultez votre emploi du temps et vos classes actives.',
+                    'link' => '#',
+                    'linkText' => 'Voir le planning'
+                ],
+                [
+                    'icon' => 'fa-book',
+                    'bg' => 'bg-warning',
+                    'title' => 'Évaluations',
+                    'text' => 'Préparez et suivez les notes de vos élèves.',
+                    'link' => '#',
+                    'linkText' => 'Voir les évaluations'
+                ]
+            ];
+        } else {
+            $dashboardCards = [
+                [
+                    'icon' => 'fa-user-cog',
+                    'bg' => 'bg-secondary',
+                    'title' => 'Fonctions générales',
+                    'text' => 'Accédez aux fonctionnalités disponibles selon votre rôle.',
+                    'link' => '#',
+                    'linkText' => 'Voir les fonctionnalités'
+                ]
+            ];
         }
 
         $this->renderView('agents/dashboard', [
             'agent' => $agent,
             'roleTitle' => $roleTitle,
-            'dashboardType' => $dashboardType
+            'dashboardType' => $dashboardType,
+            'dashboardHeader' => $dashboardHeader,
+            'dashboardCards' => $dashboardCards
         ]);
     }
 

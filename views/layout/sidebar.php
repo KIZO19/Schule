@@ -111,18 +111,41 @@ $isActive = function($uri) use ($currentRoute) {
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="<?= BASE_URL ?>/Admin/childRequests" class="nav-link <?= $isActive('/Admin/childRequests') ?>">
-                            <i class="nav-icon fas fa-user-check"></i>
-                            <p>Demandes d'enfants</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link <?= $isActive('/Agent/planning') ?>">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>Mon planning</p>
-                        </a>
-                    </li>
+                    <?php $agentRoleId = $_SESSION['agent_role_id'] ?? null; ?>
+                    <?php if (in_array($agentRoleId, [1, 2, 3, 4, 5])): ?>
+                        <li class="nav-item">
+                            <a href="<?= BASE_URL ?>/Admin/childRequests" class="nav-link <?= $isActive('/Admin/childRequests') ?>">
+                                <i class="nav-icon fas fa-user-check"></i>
+                                <p>Demandes d'enfants</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Gestion du personnel</p>
+                            </a>
+                        </li>
+                    <?php elseif (in_array($agentRoleId, [6, 7])): ?>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link <?= $isActive('/Agent/planning') ?>">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>Mon planning</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Évaluations</p>
+                            </a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-cog"></i>
+                                <p>Fonctions générales</p>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php elseif ($sessionType === 'ecole'): ?>
                     <li class="nav-item">
                         <a href="<?= BASE_URL ?>/Ecole/dashboard" class="nav-link <?= $isActive('/Ecole/dashboard') ?>">
