@@ -119,6 +119,7 @@ class AccessController extends Controller {
                                         $_SESSION['agent_name'] = trim(($ref['nom'] ?? '') . ' ' . ($ref['postnom'] ?? ''));
                                         $_SESSION['agent_role_id'] = $ref['role_id'] ?? null;
                                         $_SESSION['agent_role_title'] = $ref['role_title'] ?? $user['role'];
+                                        $_SESSION['agent_role_key'] = $user['role'];
                                         $_SESSION['agent_ecole_id'] = $ref['ecole_id'] ?? $user['ecole_id'];
                                         $_SESSION['ecole_id'] = $user['ecole_id'];
                                         $_SESSION['ecole_name'] = $this->ecoleModel->findById($user['ecole_id'])['nom_etablissement'] ?? '';

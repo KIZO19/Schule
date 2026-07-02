@@ -53,6 +53,7 @@ class AgentController extends Controller {
                     $_SESSION['agent_name'] = trim($agent['nom'] . ' ' . $agent['postnom']);
                     $_SESSION['agent_role_id'] = $agent['role_id'];
                     $_SESSION['agent_role_title'] = $agent['role_title'];
+                    $_SESSION['agent_role_key'] = strtolower(str_replace(' ', '_', trim($agent['role_title'])));
                     $_SESSION['agent_ecole_id'] = $agent['ecole_id'];
                     $_SESSION['ecole_id'] = $selectedSchoolId;
                     $_SESSION['ecole_name'] = $school['nom_etablissement'];
@@ -81,11 +82,33 @@ class AgentController extends Controller {
         }
 
         $roleTitle = $agent['role_title'] ?? 'Personnel';
+        $roleKey = $_SESSION['agent_role_key'] ?? strtolower(str_replace(' ', '_', trim($roleTitle)));
         $dashboardType = 'default';
         $dashboardHeader = 'Accédez à vos fonctionnalités selon votre rôle au sein de l\'école.';
         $dashboardCards = [];
 
-        if (in_array($agent['role_id'], [1, 2, 3, 4, 5])) {
+        if (in_array($roleKey, ['super_admin', 'ecole_admin'])) {
+            $dashboardType = 'admin';
+            $dashboardHeader = 'Tableau de bord administratif : gérez l\'établissement, les agents et les demandes.';
+            $dashboardCards = [
+                [
+                    'icon' => 'fa-user-shield',
+                    'bg' => 'bg-info',
+                    'title' => 'Administration générale',
+                    'text' => 'Supervisez les rôles, permissions et configurations de l\'école.',
+                    'link' => BASE_URL . '/Admin/childRequests',
+                    'linkText' => 'Voir les demandes'
+                ],
+                [
+                    'icon' => 'fa-school',
+                    'bg' => 'bg-success',
+                    'title' => 'Paramètres école',
+                    'text' => 'Accédez aux informations et réglages de l\'établissement.',
+                    'link' => BASE_URL . '/Ecole/dashboard',
+                    'linkText' => 'Voir l\'école'
+                ]
+            ];
+        } elseif (in_array($agent['role_id'], [1, 2, 3, 4, 5])) {
             $dashboardType = 'management';
             $dashboardHeader = 'Utilisez ce tableau de bord pour gérer les demandes, le personnel et les opérations de l\'établissement.';
             $dashboardCards = [

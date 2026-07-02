@@ -111,8 +111,23 @@ $isActive = function($uri) use ($currentRoute) {
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <?php $agentRoleId = $_SESSION['agent_role_id'] ?? null; ?>
-                    <?php if (in_array($agentRoleId, [1, 2, 3, 4, 5])): ?>
+                    <?php
+                        $agentRoleKey = $_SESSION['agent_role_key'] ?? strtolower(str_replace(' ', '_', trim($_SESSION['agent_role_title'] ?? '')));
+                    ?>
+                    <?php if (in_array($agentRoleKey, ['super_admin', 'ecole_admin'])): ?>
+                        <li class="nav-item">
+                            <a href="<?= BASE_URL ?>/Admin/childRequests" class="nav-link <?= $isActive('/Admin/childRequests') ?>">
+                                <i class="nav-icon fas fa-user-shield"></i>
+                                <p>Administration</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= BASE_URL ?>/Ecole/dashboard" class="nav-link <?= $isActive('/Ecole/dashboard') ?>">
+                                <i class="nav-icon fas fa-school"></i>
+                                <p>Établissement</p>
+                            </a>
+                        </li>
+                    <?php elseif (in_array($_SESSION['agent_role_id'] ?? null, [1, 2, 3, 4, 5])): ?>
                         <li class="nav-item">
                             <a href="<?= BASE_URL ?>/Admin/childRequests" class="nav-link <?= $isActive('/Admin/childRequests') ?>">
                                 <i class="nav-icon fas fa-user-check"></i>
@@ -125,7 +140,7 @@ $isActive = function($uri) use ($currentRoute) {
                                 <p>Gestion du personnel</p>
                             </a>
                         </li>
-                    <?php elseif (in_array($agentRoleId, [6, 7])): ?>
+                    <?php elseif (in_array($_SESSION['agent_role_id'] ?? null, [6, 7])): ?>
                         <li class="nav-item">
                             <a href="#" class="nav-link <?= $isActive('/Agent/planning') ?>">
                                 <i class="nav-icon fas fa-calendar-alt"></i>
